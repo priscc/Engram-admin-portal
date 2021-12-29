@@ -247,7 +247,7 @@ export default {
           }, 2000);
         });
       }
-      
+
       // await this.submitEditArticle();
       // this.editDialog = false;
       // this.fetchArticles("topic");

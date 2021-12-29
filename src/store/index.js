@@ -7,8 +7,8 @@ import events from "./modules/events";
 import people from "./modules/people";
 import terminology from "./modules/terminology";
 import works from "./modules/works";
-import videos from './modules/videos'
-import articles from './modules/articles'
+import videos from "./modules/videos";
+import articles from "./modules/articles";
 
 Vue.use(Vuex);
 Vue.use(db);
@@ -22,11 +22,19 @@ export default new Vuex.Store({
     terminology,
     works,
     videos,
-    articles
+    articles,
   },
   plugins: [
     createPersistedState({
-      paths: ["events", "topics", "people", "terminology", "works", "videos", "articles"],
+      paths: [
+        "events",
+        "topics",
+        "people",
+        "terminology",
+        "works",
+        "videos",
+        "articles",
+      ],
     }),
   ],
 });

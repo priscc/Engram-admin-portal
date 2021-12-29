@@ -12,21 +12,10 @@
         width="198px"
         height="139px"
         outlined
-        style="border: 1px solid #979797;margin: -1px 0px 0px -1px"
+        style="border: 1px solid #979797; margin: -1px 0px 0px -1px"
         color="#D8D8D8"
       >
-        <!-- <div
-          class="d-flex align-center pl-5"
-          style="text-align: left; font-size: 24px"
-        >
-          Preview of Event thumbnail
-        </div> -->
-        <v-img
-          v-if="event.thumbURL"
-          :src="event.thumbURL"
-          width="198px"
-          height="137px"
-        ></v-img>
+        <v-img :src="event.thumbURL"> </v-img>
       </v-card>
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
         <div id="cardbtn1">
@@ -68,9 +57,7 @@
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="dialog = false">
-                  Cancel
-                </v-btn>
+                <v-btn text @click="dialog = false"> Cancel </v-btn>
 
                 <!-- Final confirmation on deleting event -->
                 <v-btn
@@ -105,7 +92,6 @@ export default {
   data() {
     return {
       dialog: false,
-      url: null
     };
   },
   name: "Event",

@@ -12,6 +12,12 @@
             >
             <router-link
               class="col"
+              to="/addcontent/modifycontent/events/map"
+              exact
+              >Map</router-link
+            >
+            <router-link
+              class="col"
               to="/addcontent/modifycontent/events/text"
               exact
               >Text</router-link
@@ -39,9 +45,7 @@
     </v-card>
     <div class="d-flex justify-center">
       <v-col cols="12" md="11">
-        <div class="d-flex">
-          Intro:
-        </div>
+        <div class="d-flex">Intro:</div>
         <v-textarea
           v-model="descriptionMD"
           outlined
@@ -54,9 +58,7 @@
     </div>
     <div class="d-flex mt-n6 justify-center">
       <v-col cols="12" md="11">
-        <div class="d-flex">
-          Main Content:
-        </div>
+        <div class="d-flex">Main Content:</div>
         <v-textarea
           v-model="mainMD"
           outlined

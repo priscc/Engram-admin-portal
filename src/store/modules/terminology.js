@@ -14,12 +14,8 @@ export default {
     currentTerm: {
       term: "",
       def: "",
-      searchArray: [],
-      topicID: [],
-    },
-    termForEdit: {
-      term: "",
-      def: "",
+      thumbURL: "",
+      thumbFile: "",
       searchArray: [],
       topicID: [],
     },
@@ -74,7 +70,6 @@ export default {
       //* adds new term in firestore database
       await termRef.add(state.currentTerm).then(() => {
         console.log("Term Added");
-        alert("Successfully added a terminology")
       });
 
       //* fetch new list of terms
@@ -89,6 +84,8 @@ export default {
       commit("SET_CURRENT_TERM", {
         term: "",
         def: "",
+        thumbURL: "",
+        thumbFile: "",
         searchArray: [],
         topicID: [],
       });
@@ -115,7 +112,6 @@ export default {
         .set(state.currentTerm, { merge: true })
         .then(() => {
           console.log("Submit Edit for " + state.currentTerm.term);
-          alert("Succesfully edited a terminology")
         });
       dispatch("fetchTerms");
 
@@ -132,7 +128,6 @@ export default {
         .delete()
         .then(() => {
           console.log("Successfully deleted");
-          alert("Successfully deleted a terminology")
         });
       dispatch("fetchTerms");
       commit("SET_TERM_ID", null);

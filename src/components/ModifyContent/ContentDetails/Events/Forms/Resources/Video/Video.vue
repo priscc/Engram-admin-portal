@@ -2,7 +2,7 @@
   <div class="d-flex pt-4 justify-center align-center">
     <v-card
       class="d-flex"
-       width="25vw"
+      width="319px"
       height="72px"
       outlined
       style="border: 1px solid #979797"

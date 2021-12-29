@@ -1,105 +1,112 @@
 <template>
-  <v-form>
-     <v-card class="mx-auto mt-4" width="70vw" min-height="450px">
-      <v-card class="mx-auto" width="70vw" color="#273238">
-        <div class="d-flex">
-          <v-container class="pt-8 pl-12 d-flex">
-            <div id="nav">
-              <router-link
-                class="col"
-                to="/addcontent/modifycontent/events/general"
-                exact
-                >General</router-link
-              >
-              <router-link
-                class="col"
-                :event="routeValidation ? 'click' : ''"
-                to="/addcontent/modifycontent/events/text"
-                exact
-                >Text</router-link
-              >
-              <router-link
-                class="col"
-                :event="routeValidation ? 'click' : ''"
-                to="/addcontent/modifycontent/events/resources"
-                exact
-                >Resources</router-link
-              >
+  <div id="EventInfo">
+    <v-form>
+      <v-card class="mx-auto mt-4" width="62vw" height="35vw">
+        <v-card class="mx-auto" width="62vw" height="5vw" color="#273238">
+          <div class="d-flex">
+            <v-container class="pt-8 pl-12 d-flex">
+              <div id="nav">
+                <router-link
+                  class="col"
+                  to="/addcontent/modifycontent/events/general"
+                  exact
+                  >General</router-link
+                >
+                <router-link
+                  class="col"
+                  to="/addcontent/modifycontent/events/map"
+                  exact
+                  >Map</router-link
+                >
+                <router-link
+                  class="col"
+                  :event="routeValidation ? 'click' : ''"
+                  to="/addcontent/modifycontent/events/text"
+                  exact
+                  >Text</router-link
+                >
+                <router-link
+                  class="col"
+                  :event="routeValidation ? 'click' : ''"
+                  to="/addcontent/modifycontent/events/resources"
+                  exact
+                  >Resources</router-link
+                >
+              </div>
+            </v-container>
+            <div class="d-flex justify-end">
+              <span class="material-icons">
+                <v-icon
+                  size="40"
+                  color="#3891A6"
+                  @click="closeForm('Events', '/events')"
+                >
+                  disabled_by_default
+                </v-icon>
+              </span>
             </div>
-          </v-container>
-          <div class="d-flex justify-end">
-            <span class="material-icons">
-              <v-icon
-                size="40"
-                color="#3891A6"
-                @click="closeForm('Events', '/events')"
-              >
-                disabled_by_default
-              </v-icon>
-            </span>
+          </div>
+        </v-card>
+        <v-col class="pl-12 pt-9" cols="10" sm="9" md="11">
+          <v-text-field
+            v-model="title"
+            label="Title"
+            background-color="grey lighten-2"
+            outlined
+            dense
+            required
+          ></v-text-field>
+        </v-col>
+        <div class="d-flex">
+          <v-col class="pl-12 mt-n4" cols="4">
+            <v-text-field
+              v-model="startDate"
+              label="Start Date"
+              background-color="grey lighten-2"
+              outlined
+              dense
+            ></v-text-field>
+          </v-col>
+          <div class="d-flex align-center mt-n10 pr-12">
+            <div class="d-flex" style="width: 30px">{{ eraStart }}</div>
+            <v-switch
+              v-model="startEra"
+              inset
+              @click="switchToggle($event, 'start')"
+              color="#3891A6"
+            ></v-switch>
+          </div>
+          <v-col class="ml-n4 mt-n4" cols="4">
+            <v-text-field
+              v-model="endDate"
+              label="End Date"
+              background-color="grey lighten-2"
+              outlined
+              dense
+            ></v-text-field>
+          </v-col>
+          <div class="d-flex align-center mt-n10 pr-12">
+            <div class="d-flex" style="width: 30px">{{ eraEnd }}</div>
+            <v-switch
+              v-model="endEra"
+              inset
+              @click="switchToggle($event, 'end')"
+              color="#3891A6"
+            ></v-switch>
           </div>
         </div>
-      </v-card>
-      <v-col class="pl-12 pt-9" cols="10" sm="9" md="11">
-        <v-text-field
-          v-model="title"
-          label="Title"
-          background-color="grey lighten-2"
-          outlined
-          dense
-          required
-        ></v-text-field>
-      </v-col>
-      <div class="d-flex">
-        <v-col class="pl-12 mt-n4" cols="4">
-          <v-text-field
-            v-model="startDate"
-            label="Start Date"
-            background-color="grey lighten-2"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <div class="d-flex align-center mt-n10 pr-12">
-          <div class="d-flex" style="width:30px">{{ eraStart }}</div>
-          <v-switch
-            v-model="startEra"
-            inset
-            @click="switchToggle($event, 'start')"
-            color="#3891A6"
-          ></v-switch>
-        </div>
-        <v-col class="ml-n4 mt-n4" cols="4">
-          <v-text-field
-            v-model="endDate"
-            label="End Date"
-            background-color="grey lighten-2"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <div class="d-flex align-center mt-n10 pr-12">
-          <div class="d-flex" style="width:30px">{{ eraEnd }}</div>
-          <v-switch
-            v-model="endEra"
-            inset
-            @click="switchToggle($event, 'end')"
-            color="#3891A6"
-          ></v-switch>
-        </div>
-      </div>
-      <div class="d-flex pl-12 mt-n4 ">
-        <v-card
-          class="d-block"
-          height="80px"
-          width="10vw"
-          color="grey lighten-2"
-        >
-          <v-img v-if="url" :src="url" height="80px" width="10vw"></v-img>
-        </v-card>
+        <div class="d-flex pl-12 mt-n4">
+          <v-card
+            class="d-block"
+            height="80px"
+            width="10vw"
+            color="grey lighten-2"
+          >
+            <v-img v-if="url" :src="url" height="80px" width="10vw"></v-img>
+          </v-card>
 
-        <div style="width: 17vw">
-          <!-- <v-file-input
+          <div style="width: 17vw">
+            <!-- <v-file-input
             class="pt-10"
             @change="Preview_image"
             v-model="image"
@@ -109,36 +116,42 @@
             placeholder="Upload TOPIC thumbnail"
           >
           </v-file-input> -->
-          <input class="pl-4" ref="input1" type="file" @change="previewImage" />
+            <input
+              class="pl-4"
+              ref="input1"
+              type="file"
+              @change="previewImage"
+            />
+          </div>
         </div>
-      </div>
-      <v-col class="pl-12" cols="10">
-        <div class="d-flex flex-start" style="width: 24vw">
-          <v-select
-            v-model="selectedPeriod"
-            :items="eventTheme"
-            :menu-props="{ top: false, offsetY: true }"
-            label="Choose Event Theme:"
-            background-color="grey lighten-2"
-            outlined
-            dense
+        <v-col class="pl-12" cols="10">
+          <div class="d-flex flex-start" style="width: 24vw">
+            <v-select
+              v-model="selectedPeriod"
+              :items="eventTheme"
+              :menu-props="{ top: false, offsetY: true }"
+              label="Choose Event Theme:"
+              background-color="grey lighten-2"
+              outlined
+              dense
+            >
+            </v-select>
+          </div>
+        </v-col>
+        <div class="d-flex justify-end pr-12">
+          <v-btn
+            class="white--text"
+            width="140"
+            color="#3891A6"
+            elevation="2"
+            :disabled="!checkfield"
+            @click="handleSaveEvent"
+            >Save</v-btn
           >
-          </v-select>
         </div>
-      </v-col>
-      <div class="d-flex justify-end pr-12">
-        <v-btn
-          class="white--text"
-          width="140"
-          color="#3891A6"
-          elevation="2"
-          :disabled="!checkfield"
-          @click="handleSaveEvent"
-          >Save</v-btn
-        >
-      </div>
-    </v-card>
-  </v-form>
+      </v-card>
+    </v-form>
+  </div>
 </template>
 
 <script>

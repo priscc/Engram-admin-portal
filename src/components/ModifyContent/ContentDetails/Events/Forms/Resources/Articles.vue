@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-auto pt-4 d-flex justify-center">
-    <v-card class="" width="30vw" height="410px" color="#D8D8D8" outlined>
+  <div class="mx-auto pt-9 d-flex justify-center">
+    <v-card class="mx-10" width="380px" height="430px" color="#D8D8D8" outlined>
       <div class="d-flex pl-4 pt-2">Article Resources</div>
       <div class="mt-2" style="overflow-y: scroll; height: 365px">
         <div v-for="article in currentArticles" :key="article.id">
@@ -10,7 +10,7 @@
         <div class="d-flex pt-4 justify-center align-center">
           <v-card
             class="d-flex"
-            width="25vw"
+            width="319px"
             outlined
             style="border: 1px solid #979797"
           >
@@ -33,26 +33,22 @@
               </div>
             </div>
             <div class="d-flex space-between mx-auto">
-              <v-form ref="form" v-model="valid" lazy-validation>
+              <v-form ref="form" lazy-validation>
                 <div class="d-flex">
-                  <div style="width:130px">
-                    <v-text-field
-                      class="px-2"
-                      v-model="newsSource"
-                      placeholder="News Source"
-                      required
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div style="width:100px">
-                    <v-text-field
-                      class="px-2"
-                      v-model="published"
-                      placeholder="Publish Date"
-                      required
-                      dense
-                    ></v-text-field>
-                  </div>
+                  <v-text-field
+                    class="px-2"
+                    v-model="newsSource"
+                    placeholder="New Source"
+                    required
+                    dense
+                  ></v-text-field>
+                  <v-text-field
+                    class="px-2"
+                    v-model="published"
+                    placeholder="Publish Date"
+                    required
+                    dense
+                  ></v-text-field>
                 </div>
                 <div class="mt-n4" style="width: 155px">
                   <v-text-field
@@ -77,16 +73,16 @@
                 <div class="d-flex mt-n2 pl-2">
                   <v-card
                     class="d-block"
-                    width="9vw"
-                    height="70px"
+                    width="6vw"
+                    height="4vw"
                     color="grey lighten-2"
                     outlined
                   >
-                    <v-img :src="urlImg" height="70px" max-width="9vw"></v-img>
+                    <v-img :src="url"></v-img>
                   </v-card>
 
                   <div style="width: 13vw">
-                    <!-- <v-file-input
+                    <v-file-input
                       class="pt-6 ml-n4"
                       v-model="image"
                       accept="image/*"
@@ -94,16 +90,10 @@
                       append-icon="attach_file"
                       placeholder="Article Thumbnail"
                     >
-                    </v-file-input> -->
-                    <input
-                      name="map"
-                      class="pl-4"
-                      type="file"
-                      @change="previewImage"
-                    />
+                    </v-file-input>
                   </div>
                 </div>
-                <div style="width: 155px">
+                <div class="mt-n4" style="width: 155px">
                   <v-text-field
                     class="px-2"
                     v-model="url"
@@ -125,30 +115,23 @@
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import Article from "./Article/Article.vue";
-import firebase from "firebase";
-
 export default {
   name: "Articles",
   components: { Article },
   data() {
     return {
-      valid: null,
       image: null,
       parentType: "event",
-      urlImg: null,
-      imageData: null,
     };
   },
   computed: {
     ...mapGetters("articles", ["currentArticles"]),
     ...mapFields("articles", [
       "currentArticle.title",
-      "currentArticle.newsSource",
       "currentArticle.published",
-      "currentArticle.url",
+      "currentArticle.newsSource",
       "currentArticle.summary",
-      "currentArticle.thumbURL",
-      "currentArticle.thumbFile",
+      "currentArticle.url",
     ]),
   },
   methods: {
@@ -158,67 +141,10 @@ export default {
       console.log("Submitted");
       alert("Submitted");
     },
+    Preview_image() {},
     async submitNewArticleHandler(type) {
-      if (this.imageData) {
-        let imgPromise = Promise.resolve(this.onUpload());
-        await imgPromise.then(async () => {
-          setTimeout(async () => {
-            await this.submitNewArticle(type);
-            await this.fetchContentArticles(type);
-            this.urlImg = null;
-            this.thumbFile = null;
-          }, 2000);
-        });
-        await this.onUpload();
-      } else {
-        this.thumbFile = "placeHolderImg.png";
-        this.thumbURL =
-          "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
-
-        setTimeout(async () => {
-          await this.submitNewArticle(type);
-          await this.fetchContentArticles(type);
-        }, 2000);
-      }
-    },
-    previewImage(e) {
-      this.uploadValue = 0;
-      console.log(e.target.files[0]);
-      let file = e.target.files[0];
-      let fileSize = file.size / 1024 / 1024;
-      if (fileSize > 2) {
-        e.preventDefault();
-        alert("File is over 2mb");
-      } else {
-        this.urlImg = URL.createObjectURL(file);
-        this.imageData = e.target.files[0];
-        this.thumbFile = file.name;
-      }
-    },
-    onUpload() {
-      const storageRef = firebase
-        .storage()
-        .ref(`${this.imageData.name}`)
-        .put(this.imageData);
-      storageRef.on(
-        `state_changed`,
-        (snapshot) => {
-          this.uploadValue =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        },
-        (error) => {
-          console.log(error.message);
-        },
-        () => {
-          this.uploadValue = 100;
-          storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            // this.img1 = url;
-            // console.log(this.img1);
-            this.thumbURL = url;
-            console.log(this.thumbURL);
-          });
-        }
-      );
+      this.submitNewArticle(type);
+      this.fetchContentArticles(type);
     },
   },
   created() {

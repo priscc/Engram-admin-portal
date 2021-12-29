@@ -1,124 +1,96 @@
 <template>
-  <v-app>
-    <div id="addcontent">
-      <v-container class="d-flex flex-row mt-4">
-        <!-- <div class="d-flex flex-row"> -->
-
+  <div id="MainMenu">
+    <v-container fluid class="d-flex flex-row mt-4">
+      <v-row>
         <!-- ADD A TOPIC -->
-
-        <v-card
-          class="mx-auto"
-          width="22vw"
-          height="34vw"
-          max-width="320"
-          max-height="484"
-        >
-          <v-card
-            class="mx-auto"
-            min-height="150"
-            min-width="120"
-            width="22vw"
-            height="19vw"
-            max-width="320"
-            max-height="280"
-            color="#273238"
-            @click="addTopicHandler"
-          >
-            <v-card-title
-              class="white--text display-1 justify-center pt-16"
-              style="font-family: Abel"
-              >Add a topic</v-card-title
+        <v-col>
+          <v-hover v-slot="{ hover }">
+            <v-card
+              class="mx-auto"
+              :elevation="hover ? 10 : 2"
+              :class="{ 'on-hover': hover }"
+              max-width="344"
+              min-height="330"
+              @click="addTopicHandler"
             >
-            <span class="material-icons">
-              <v-icon size="100" color="#3891A6">
-                add_box
-              </v-icon>
-            </span>
-          </v-card>
-          <v-card-text class="text--primary text-darken">
-            <div class="text-left font-weight-medium pa-6 headline">
-              Creating a new topic for a specific time period
-            </div>
-          </v-card-text>
-        </v-card>
-
+              <v-card-title
+                class="d-flex flex-column align-center justify-center py-6 mb-4"
+                style="font-family: Abel; background-color: #273238"
+              >
+                <p class="white--text display-1">Add a topic</p>
+                <v-icon size="70" color="#3891A6">
+                  mdi-plus-box-outline
+                </v-icon>
+              </v-card-title>
+              <v-card-text>
+                <div class="text-left font-weight-medium headline">
+                  Creating a new topic for a specific time period
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-col>
         <!-- MODIFY A TOPIC -->
-        <v-card
-          class="mx-auto"
-          width="22vw"
-          height="34vw"
-          max-width="320"
-          max-height="484"
-        >
-          <v-card
-            class="mx-auto"
-            min-height="150"
-            min-width="120"
-            width="22vw"
-            height="19vw"
-            max-width="320"
-            max-height="280"
-            color="#273238"
-            @click="$router.push({ name: 'TopicList', path: '/topiclist' })"
-          >
-            <v-card-title
-              class="white--text block justify-center display-1 pt-16"
-              >Modify a topic</v-card-title
+        <v-col>
+          <v-hover v-slot="{ hover }">
+            <v-card
+              class="mx-auto"
+              :elevation="hover ? 10 : 2"
+              :class="{ 'on-hover': hover }"
+              max-width="344"
+              min-height="330"
+              @click="$router.push({ name: 'TopicList', path: '/topiclist' })"
             >
-            <span class="material-icons">
-              <v-icon size="100" color="#3891A6">
-                create
-              </v-icon>
-            </span>
-          </v-card>
-          <v-card-text class="text--primary text-darken">
-            <div class="text-left font-weight-medium pa-6 headline">
-              Edit an existing topic from a specific time period
-            </div>
-          </v-card-text>
-        </v-card>
-
+              <v-card-title
+                class="d-flex flex-column align-center justify-center py-6 mb-4"
+                style="font-family: Abel; background-color: #273238"
+              >
+                <p class="white--text display-1">Edit topic info</p>
+                <v-icon size="70" color="#3891A6"> mdi-lead-pencil </v-icon>
+              </v-card-title>
+              <v-card-text>
+                <div class="text-left font-weight-medium headline">
+                  Edit an existing topic from a specific time period
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-col>
         <!-- MODIFY A CONTENT -->
-
-        <v-card
-          class="mx-auto"
-          width="22vw"
-          height="34vw"
-          max-width="320"
-          max-height="484"
-        >
-          <v-card
-            class="mx-auto"
-            min-height="150"
-            min-width="120"
-            width="22vw"
-            height="19vw"
-            max-width="320"
-            max-height="280"
-            color="#273238"
-            @click="modifyContent"
-          >
-            <v-card-title
-              class="white--text block justify-center display-1 pt-16"
-              >Modify content</v-card-title
+        <v-col>
+          <v-hover v-slot="{ hover }">
+            <v-card
+              class="mx-auto"
+              :elevation="hover ? 10 : 2"
+              :class="{ 'on-hover': hover }"
+              max-width="344"
+              min-height="330"
+              @click="modifyContent"
             >
-            <i
-              class="fa fa-pencil-square-o pt-2"
-              style="font-size: 100px; color:#3891A6;"
-              aria-hidden="true"
-            ></i>
-          </v-card>
-          <v-card-text class="text--primary text-darken">
-            <div class="text-left font-weight-medium pa-6 headline">
-              Edit or add content (events, people, terminology) to a selected
-              topic.
-            </div>
-          </v-card-text>
-        </v-card>
-        <!-- </div> -->
-      </v-container>
-    </div>
-  </v-app>
+              <v-card-title
+                class="d-flex flex-column align-center justify-center py-6 mb-4"
+                style="font-family: Abel; background-color: #273238"
+              >
+                <p class="white--text display-1">
+                  Edit topic <br />
+                  components
+                </p>
+                <v-icon size="70" color="#3891A6">
+                  mdi-pencil-box-outline
+                </v-icon>
+              </v-card-title>
+              <v-card-text>
+                <div class="text-left font-weight-medium headline">
+                  Edit or add content (events, people, terminology) to a
+                  selected topic.
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>

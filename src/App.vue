@@ -1,25 +1,52 @@
 <template>
   <v-app>
-    <div id="app">
-      <div id="nav">
-        <router-link to="/" exact>Home</router-link> |
-        <router-link to="/about" exact>About</router-link> |
-        <router-link
-          :class="[
-            currentPage.includes('content') ? activeClass : '',
-            'nav-item',
-          ]"
-          to="/addcontent"
-          exact
-          >Add Content</router-link
-        >
-        | <router-link to="/" exact>Next Steps</router-link> |
-        <router-link to="/" exact>GEO Tester</router-link> |
-        <div id="logout" @click="logout">Logout</div>
-        |
-      </div>
-      <router-view />
-    </div>
+    <!-- <div id="app"> -->
+    <v-card class="overflow-hidden">
+      <v-app-bar
+        absolute
+        color="white"
+        elevate-on-scroll
+        scroll-target="#scrolling-techniques-7"
+        src="https://picsum.photos/1920/1080?random"
+      >
+        <template v-slot:img="{ props }">
+          <v-img
+            v-bind="props"
+            gradient="to top right,#607D8B, rgba(25,32,72,.7)"
+          ></v-img>
+        </template>
+
+        <v-toolbar-title>
+          <v-btn text x-large
+            ><router-link
+              class="white--text font-weight-black"
+              :class="[
+                currentPage.includes('content') ? activeClass : '',
+                'nav-item',
+              ]"
+              to="/addcontent"
+              exact
+              >Study Bites Admin Portal
+            </router-link>
+          </v-btn>
+        </v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn icon color="white" @click="logout">
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+      </v-app-bar>
+      <v-sheet
+        id="scrolling-techniques-7"
+        class="overflow-y-auto"
+        max-height="800"
+      >
+        <v-container style="padding-top: 100px; padding-bottom: 100px"
+          ><router-view />
+        </v-container>
+      </v-sheet>
+    </v-card>
   </v-app>
 </template>
 

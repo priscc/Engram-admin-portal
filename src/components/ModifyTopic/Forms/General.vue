@@ -268,8 +268,7 @@ export default {
       });
     },
     async handleSaveEdit() {
-      
-       if (this.intro_thumbURL === "") {
+      if (this.intro_thumbURL === "") {
         //   alert("Please provide images");
         this.intro_thumbFile = "placeHolderImg.png";
         this.intro_thumbURL =
@@ -291,7 +290,7 @@ export default {
         setTimeout(async () => {
           await this.submitEditTopic();
         }, 2000);
-      } 
+      }
     },
     resetbtn(e) {
       if (this.checkfield) {

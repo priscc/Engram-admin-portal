@@ -63,15 +63,13 @@ export default {
 
     //* submit new topic
     async submitNewTopic({ state, commit }) {
-
-      commit("SET_SEARCH_ARRAY", state.currentTopic.title)
+      commit("SET_SEARCH_ARRAY", state.currentTopic.title);
 
       await topicsRef
         .add(state.currentTopic)
         .then(() => {
           console.log("Submitted New Topic");
           router.replace({ path: "/addcontent" });
-          alert("Successfully added a topic")
         })
         .catch((err) => {
           console.log(err);
@@ -104,7 +102,6 @@ export default {
 
     //* topic id gets stored to the state and used in querying the specific topic
     async editTopic({ state, commit }, topic) {
-      
       await commit("SET_ID", topic.id);
       //* identifies the time period of the topic for edit
       let period = Object.keys(state.topics).filter(
@@ -129,7 +126,7 @@ export default {
         .set(state.currentTopic, { merge: true })
         .then(() => {
           console.log("Submitted Edited Topic");
-          alert("Successfully edited topic")
+          alert("Successfully edited topic");
         });
     },
 

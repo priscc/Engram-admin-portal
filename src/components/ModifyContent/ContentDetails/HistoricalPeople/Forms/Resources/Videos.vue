@@ -1,6 +1,6 @@
 <template>
- <div class="mx-auto pt-4 d-flex justify-center">
-    <v-card class="" width="30vw" height="410px" color="#D8D8D8" outlined>
+  <div class="mx-auto pt-9 d-flex justify-center">
+    <v-card class="mx-10" width="380px" height="430px" color="#D8D8D8" outlined>
       <div class="d-flex pl-4 pt-2">Video Resources</div>
       <div class="mt-2" style="overflow-y: scroll; height: 365px">
         <div v-for="video in currentVideos" :key="video.id">
@@ -9,7 +9,7 @@
         <div class="d-flex pt-4 justify-center align-center">
           <v-card
             class="d-flex"
-             width="25vw"
+            width="319px"
             height="80px"
             outlined
             style="border: 1px solid #979797"

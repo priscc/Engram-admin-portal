@@ -91,9 +91,9 @@ export default {
     async submitNewPerson({ dispatch, state, commit }) {
       await dispatch("setPersonTopicId");
       await commit("SET_SEARCH_ARRAY", state.currentPerson.name);
+      console.log("state", state.currentPerson);
       await peopleRef.add(state.currentPerson).then(() => {
         console.log("Person Added");
-        alert("Successfully added a Historical Figure")
       });
     },
 
@@ -104,7 +104,7 @@ export default {
     },
 
     //* sets current event for edit
-    async editPerson({ state, commit,  }, person) {
+    async editPerson({ state, commit, dispatch }, person) {
       await commit("SET_PERSON_ID", person.id);
       console.log(state.personId);
 
@@ -117,7 +117,7 @@ export default {
       commit("SET_CURRENT_PERSON", currentPerson);
       console.log(state.currentPerson);
 
-      // await dispatch("fetchPersonResources");
+      await dispatch("fetchPersonResources");
     },
 
     //* handles submit for edit person
@@ -128,7 +128,6 @@ export default {
         .set(state.currentPerson, { merge: true })
         .then(() => {
           console.log("Submit Edit for " + state.currentPerson.name);
-          alert("Successfully edited a Historical Figure")
         });
     },
 
@@ -140,7 +139,6 @@ export default {
         .delete()
         .then(() => {
           console.log("Successfully deleted");
-          alert("Successfully deleted a Historical Figure")
         });
       setTimeout(() => dispatch("fetchPeople"), 200);
     },

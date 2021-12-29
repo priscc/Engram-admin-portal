@@ -24,7 +24,6 @@ export default {
   getters: {
     getField,
     currentTopicWorks: (state) => state.works,
-    currentWork: (state) => state.currentWork
   },
 
   actions: {
@@ -74,7 +73,6 @@ export default {
       //* adds new work in firestore database
       await worksRef.add(state.currentWork).then(() => {
         console.log("Work added");
-        alert("Successfully added artifact")
       });
 
       dispatch("fetchWorks");
@@ -102,7 +100,6 @@ export default {
         .set(state.currentWork, { merge: true })
         .then(() => {
           console.log("Submit edit for " + state.currentWork.title);
-          alert("Successfully edited an artifact");
         });
       dispatch("fetchWorks");
       dispatch("clearWorkId");
@@ -117,7 +114,6 @@ export default {
         .delete()
         .then(() => {
           console.log("Succesfully deleted");
-          alert("Deleted an artifact")
         });
 
       //* finds and sets the index for delete

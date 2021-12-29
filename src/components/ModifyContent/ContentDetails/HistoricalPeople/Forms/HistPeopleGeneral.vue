@@ -1,7 +1,7 @@
 <template>
   <v-form>
-    <v-card class="mx-auto mt-4" width="70vw" min-height="450px">
-      <v-card class="mx-auto" width="70vw" color="#273238">
+    <v-card class="mx-auto mt-4" width="62vw" height="28vw">
+      <v-card class="mx-auto" width="62vw" height="5vw" color="#273238">
         <div class="d-flex">
           <v-container class="pt-8 pl-12 d-flex">
             <div id="nav">
@@ -66,7 +66,7 @@
           ></v-text-field>
         </v-col>
         <div class="d-flex align-center mt-n10 pr-12">
-          <div class="d-flex" style="width:30px">{{ eraBirth }}</div>
+          <div class="d-flex" style="width: 30px">{{ eraBirth }}</div>
           <v-switch
             v-model="birthEra"
             color="#3891A6"
@@ -84,7 +84,7 @@
           ></v-text-field>
         </v-col>
         <div class="d-flex align-center mt-n10 pr-12">
-          <div class="d-flex" style="width:30px">{{ eraPassing }}</div>
+          <div class="d-flex" style="width: 30px">{{ eraPassing }}</div>
           <v-switch
             v-model="passingEra"
             color="#3891A6"
@@ -93,7 +93,7 @@
           ></v-switch>
         </div>
       </div>
-      <div class="d-flex pl-12 mt-n4 ">
+      <div class="d-flex pl-12 mt-n4">
         <v-card
           class="d-block"
           height="80px"
@@ -111,7 +111,7 @@
             accept="image/*"
             prepend-icon="none"
             append-icon="attach_file"
-            placeholder="Upload Profile thumbnail"
+            placeholder="Upload TOPIC thumbnail"
           >
           </v-file-input> -->
           <input class="pl-4" ref="input1" type="file" @change="previewImage" />
@@ -153,19 +153,11 @@ export default {
     selectedPeriod: null,
     disabled: 1,
     url: null,
+    imageData: null,
     eraBirth: "AD",
     eraPassing: "AD",
-    imageData: null,
   }),
   computed: {
-    ...mapFields("people", ["currentPerson.name", "currentPerson.mainMD", "currentPerson.thumbURL", "currentPerson.thumbFile"]),
-    ...mapFields("people", {
-      dateOfBirth: "currentPerson.dateOfBirth.date",
-      birthEra: "currentPerson.dateOfBirth.era",
-      dateOfPassing: "currentPerson.dateOfPassing.date",
-      passingEra: "currentPerson.dateOfPassing.era",
-    }),
-    ...mapGetters("people", ["currentPersonId", "currentPerson"]),
     selectsPeriod() {
       return this.selectedPeriod.length > 0;
     },
@@ -176,6 +168,18 @@ export default {
     checkfield() {
       return this.currentPerson.name;
     },
+    ...mapFields("people", [
+      "currentPerson.name",
+      "currentPerson.thumbURL",
+      "currentPerson.thumbFile",
+    ]),
+    ...mapFields("people", {
+      dateOfBirth: "currentPerson.dateOfBirth.date",
+      birthEra: "currentPerson.dateOfBirth.era",
+      dateOfPassing: "currentPerson.dateOfPassing.date",
+      passingEra: "currentPerson.dateOfPassing.era",
+    }),
+    ...mapGetters("people", ["currentPersonId", "currentPerson"]),
 
     //* checks if the person name field is empty
     routeValidation() {
@@ -189,7 +193,26 @@ export default {
     },
   },
   methods: {
-    ...mapActions("people", ["handleSave"]),
+    mountPreview() {
+      this.url = this.thumbURL;
+    },
+    previewImage(e) {
+      this.uploadValue = 0;
+      console.log(e.target.files[0]);
+      let file = e.target.files[0];
+      let fileSize = file.size / 1024 / 1024;
+      if (fileSize > 2) {
+        e.preventDefault();
+        alert("File is over 2mb");
+      } else {
+        this.url = URL.createObjectURL(file);
+        this.imageData = e.target.files[0];
+        this.thumbFile = file.name;
+      }
+    },
+    // Preview_image() {
+    //   this.url = URL.createObjectURL(this.image);
+    // },
     toggle() {
       this.$nextTick(() => {
         this.selectedPeriod = this.timePeriod.slice();
@@ -219,23 +242,6 @@ export default {
       }
       e.preventDefault();
     },
-    mountPreview() {
-      this.url = this.thumbURL;
-    },
-    previewImage(e) {
-      this.uploadValue = 0;
-      console.log(e.target.files[0]);
-      let file = e.target.files[0];
-      let fileSize = file.size / 1024 / 1024;
-      if (fileSize > 2) {
-        e.preventDefault();
-        alert("File is over 2mb");
-      } else {
-        this.url = URL.createObjectURL(file);
-        this.imageData = e.target.files[0];
-        this.thumbFile = file.name;
-      }
-    },
     onUpload() {
       const storageRef = firebase
         .storage()
@@ -261,13 +267,9 @@ export default {
         }
       );
     },
+    ...mapActions("people", ["handleSave"]),
     async savePersonHandler() {
-      // this.handleSave();
-      // this.$router.replace({
-      //   name: "HistoricalPeople",
-      //   path: "/addcontent/modifycontent/historicalpeople",
-      // });
-       if (this.imageData) {
+      if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
           setTimeout(async () => {
@@ -282,6 +284,10 @@ export default {
           await this.handleSave();
         }, 2000);
       }
+      // this.$router.replace({
+      //   name: "HistoricalPeople",
+      //   path: "/addcontent/modifycontent/historicalpeople",
+      // });
     },
   },
   created() {

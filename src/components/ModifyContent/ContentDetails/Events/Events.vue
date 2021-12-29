@@ -1,78 +1,96 @@
 <template>
-  <v-app class="d-flex flex-column align-center">
-    <div class="d-flex flex-column" style="width: 66vw;">
-      <div class="d-flex flex-start">
-        <span
-          class="material-icons"
-          style="cursor: pointer"
-          @click="
-            $router.push({ name: 'ModifyContent', path: '/modifycontent' })
-          "
-        >
-          <v-icon size="65" color="#3891A6">
-            navigate_before
-          </v-icon>
-        </span>
-      </div>
-    </div>
-    <div style="font-size: 36px">Modifying Topic Content</div>
-    <v-card class="mx-auto" width="52vw" height="5vw" color="#273238">
-      <div class="d-flex">
-        <v-container class="d-flex justify-center pt-6">
-          <div id="nav">
-            <router-link class="col" to="/addcontent/modifycontent/events" exact
-              >Events</router-link
+  <div id="modifyContent">
+    <v-container fluid>
+      <!-- TITLE -->
+      <v-row>
+        <v-col>
+          <div class="d-flex flex-start">
+            <v-btn
+              fab
+              text
+              @click="
+                $router.push({ name: 'ModifyContent', path: '/modifycontent' })
+              "
             >
-            <router-link
-              class="col"
-              to="/addcontent/modifycontent/historicalpeople"
-              exact
-              >Historical People</router-link
-            >
-            <router-link
-              class="col"
-              to="/addcontent/modifycontent/terminology"
-              exact
-              >Terminology</router-link
-            >
-            <router-link
-              class="col"
-              to="/addcontent/modifycontent/primarysources"
-              exact
-              >Primary Sources</router-link
-            >
+              <v-icon size="42" color="#3891A6">
+                mdi-arrow-left-drop-circle
+              </v-icon>
+            </v-btn>
+            <div style="font-size: 36px">Modifying Topic Content</div>
           </div>
-        </v-container>
+        </v-col>
+      </v-row>
+      <!-- TABS -->
+      <v-row>
+        <v-col>
+          <v-card id="nav" rounded class="py-6 px-3" color="#273238">
+            <v-tabs v-model="tab" grow show-arrows>
+              <v-tabs-slider color="white"></v-tabs-slider>
+              <v-tab style="background-color: #3891a6">
+                <router-link to="/addcontent/modifycontent/events">
+                  Events
+                </router-link>
+              </v-tab>
+
+              <v-tab style="background-color: #5b6368">
+                <router-link to="/addcontent/modifycontent/historicalpeople">
+                  Historical People
+                </router-link>
+              </v-tab>
+
+              <v-tab style="background-color: #5b6368">
+                <router-link to="/addcontent/modifycontent/terminology">
+                  Terminology
+                </router-link>
+              </v-tab>
+              <v-tab style="background-color: #5b6368">
+                <router-link to="/addcontent/modifycontent/primarysources">
+                  Primary Sources
+                </router-link>
+              </v-tab>
+            </v-tabs>
+          </v-card>
+        </v-col>
+      </v-row>
+      <!-- ADDING CONTENT -->
+      <v-row>
+        <!-- ADD CONTENT BUTTON -->
+        <v-col lg="8" md="8" sm="8" xs="12" class="d-flex justify-start">
+          <v-btn
+            class="white--text"
+            width="400"
+            color="#3891A6"
+            elevation="2"
+            @click="addEventForm"
+            >+ Add an Event</v-btn
+          >
+        </v-col>
+        <v-spacer></v-spacer>
+        <!-- DROP DOWN MENU -->
+        <v-col class="d-flex flex-row">
+          <p class="pt-1 pr-2" style="font-size: 18px; width: 100px">
+            Sort by:
+          </p>
+          <div>
+            <v-select
+              disabled
+              v-model="selectedPeriod"
+              :items="timePeriod"
+              :menu-props="{ top: false, offsetY: false }"
+              background-color="grey lighten-2"
+              outlined
+              dense
+            >
+            </v-select>
+          </div>
+        </v-col>
+      </v-row>
+      <!-- DISPLAYING EVENTS -->
+      <div v-for="event in currentTopicEvents" :key="event.id">
+        <Event v-bind:event="event" />
       </div>
-    </v-card>
-    <div class="d-flex justify-center pt-6">
-      <v-btn
-        class="white--text"
-        width="400"
-        color="#3891A6"
-        elevation="2"
-        @click="addEventForm"
-        >+ Add an Event</v-btn
-      >
-    </div>
-    <div class="d-flex justify-center pt-6">
-      <div class="pt-1 pr-2" style="font-size: 18px">Sort by:</div>
-      <div style="width: 16vw">
-        <v-select
-          v-model="selectedPeriod"
-          :items="timePeriod"
-          :menu-props="{ top: false, offsetY: false }"
-          background-color="grey lighten-2"
-          outlined
-          dense
-        >
-        </v-select>
-      </div>
-    </div>
-    <div v-for="event in currentTopicEvents" :key="event.id">
-      <Event v-bind:event="event" />
-    </div>
-  </v-app>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -89,6 +107,7 @@ export default {
         "Title: Descending",
       ],
       selectedPeriod: "Events: Ascending",
+      tab: 0,
     };
   },
   components: { Event },
@@ -121,7 +140,6 @@ export default {
 }
 #nav {
   a {
-    padding: 4px 24px;
     text-decoration: none;
     color: #ffffff;
     font-weight: lighter;

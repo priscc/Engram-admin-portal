@@ -113,7 +113,6 @@ export default {
       //* adds new article to firestore
       await resourcesRef.add(state.currentArticle).then(() => {
         console.log("Submitted Article Resource");
-        alert("Successfully added new article")
       });
       dispatch("clearArticleForm");
     },
@@ -138,7 +137,6 @@ export default {
         .set(state.currentArticle, { merge: true })
         .then(() => {
           console.log("Submit Edit for " + state.currentArticle.title);
-          alert("Successfully edited an article")
         });
     },
 
@@ -150,7 +148,6 @@ export default {
         .delete()
         .then(() => {
           console.log("Successfully deleted");
-          alert("Deleted an article");
         });
       commit("SET_ARTICLE_ID", null);
     },

@@ -165,11 +165,13 @@ export default {
       if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
+          //     await this.submitNewTopic();
+          //     console.log(res);
           setTimeout(async () => {
             await this.submitNewArticle(type);
             this.fetchArticles(type);
-            this.urlImg = null
-            this.thumbFile = null
+            this.urlImg = null;
+            this.thumbFile = null;
           }, 2000);
         });
         await this.onUpload();

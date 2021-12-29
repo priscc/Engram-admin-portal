@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto mt-4 mb-12" width="70vw" min-height="570px">
-      <v-card class="mx-auto" width="70vw" color="#273238">
+    <v-card class="mx-auto" width="70vw" color="#273238">
       <div class="d-flex">
         <v-container class="pt-8 pl-12 d-flex">
           <div id="nav">

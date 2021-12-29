@@ -131,7 +131,6 @@ export default {
       //* adds new video to firestore
       await resourcesRef.add(state.currentVideoResource).then(() => {
         console.log("Submitted Video Resource");
-        alert("Successfully added a video")
       });
       dispatch("clearVideoForm");
       alert("Submitted Video Resource");
@@ -160,7 +159,6 @@ export default {
         .set(state.currentVideoResource, { merge: true })
         .then(() => {
           console.log("Submit Edit for " + state.currentVideoResource.title);
-          alert("Successfully edited a video")
         });
       dispatch("clearVideoForm");
     },
@@ -173,7 +171,6 @@ export default {
         .delete()
         .then(() => {
           console.log("Successfully deleted");
-          alert("Successfully deleted a video")
         });
       commit("SET_VIDEO_ID", null);
       dispatch("clearVideoForm");

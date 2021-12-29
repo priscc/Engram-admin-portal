@@ -25,6 +25,7 @@ export default {
       mainMD: "",
       thumbURL: "",
       thumbFile: "",
+      imageData: "",
       theme: [],
       searchArray: [],
       topicID: [],
@@ -85,7 +86,7 @@ export default {
           });
           commit("SET_TOPIC_EVENTS", eventsList);
         });
-      console.log(rootState.topics.topicID);
+      // console.log(state.topicId);
     },
 
     //* handler for add event button, clears the fields
@@ -104,6 +105,7 @@ export default {
         mainMD: "",
         thumbURL: "",
         thumbFile: "",
+        imageData: "",
         theme: [],
         searchArray: [],
         topicID: [],
@@ -118,13 +120,24 @@ export default {
     async submitNewEvent({ state, dispatch, rootState, commit }) {
       await dispatch("setEventTopicId");
       await commit("SET_SEARCH_ARRAY", state.currentEvent.title);
+      console.log("state", state.currentEvent);
       await eventsRef.add(state.currentEvent).then(() => {
         console.log("Event Added");
-        alert("Successfully added an event")
       });
+      dispatch("closeForm", "Events", "/events");
       console.log(rootState.topics.topicID);
     },
-
+    //* handles submit for edit event
+    async submitEditEvent({ state, dispatch, commit }) {
+      await commit("UPDATE_SEARCH_ARRAY", state.currentEvent.title);
+      await eventsRef
+        .doc(state.eventId)
+        .set(state.currentEvent, { merge: true })
+        .then(() => {
+          console.log("Submit Edit" + state.currentEvent);
+        });
+      dispatch("closeForm", "Events", "/events");
+    },
     //* clears the current eventId
     clearEventId({ commit }) {
       commit("CLEAR_EVENT_ID", null);
@@ -151,19 +164,6 @@ export default {
       // await dispatch("getEvent");
     },
 
-    //* handles submit for edit event
-    async submitEditEvent({ state, commit }) {
-      await commit("UPDATE_SEARCH_ARRAY", state.currentEvent.title);
-      await eventsRef
-        .doc(state.eventId)
-        .set(state.currentEvent, { merge: true })
-        .then(() => {
-          console.log(state.currentEvent);
-          console.log("Submit Edit");
-          alert("Successfully edited an event")
-        });
-    },
-
     //* deletes the event from the database
     async deleteEvent({ commit, state, dispatch }, event) {
       await commit("SET_EVENT_ID", event.id);
@@ -172,7 +172,6 @@ export default {
         .delete()
         .then(() => {
           console.log("Deleted Event");
-          alert("Event deleted")
         });
       dispatch("fetchEventsList");
     },

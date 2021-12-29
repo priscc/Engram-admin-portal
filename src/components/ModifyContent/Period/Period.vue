@@ -1,13 +1,19 @@
 <template>
-  <div>
-    <div class="d-flex flex-start pt-10" style="font-size: 24px">
-      Time Period: {{ period }}
-    </div>
-    <div class="d-flex flex-wrap" style="width: 70vw">
-      <div class="px-2" v-for="topic in topics" :key="topic.id">
-        <Topic v-bind:topic="topic" v-bind:topics="topics" />
-      </div>
-    </div>
+  <div id="modifyContent_Period">
+    <v-row>
+      <v-col>
+        <v-row>
+          <div class="d-flex flex-start pt-10" style="font-size: 24px">
+            Time Period: {{ period }}
+          </div>
+        </v-row>
+        <v-row style="padding-left: 30px">
+          <v-col cols="4" v-for="topic in topics" :key="topic.id">
+            <Topic v-bind:topic="topic" v-bind:topics="topics" />
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

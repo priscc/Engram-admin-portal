@@ -9,24 +9,13 @@
     >
       <v-card
         class="d-flex"
-        width="250px"
+        width="198px"
         height="139px"
         outlined
-        style="border: 1px solid #979797;margin: -1px 0px 0px -1px"
+        style="border: 1px solid #979797; margin: -1px 0px 0px -1px"
         color="#D8D8D8"
       >
-        <!-- <div
-          class="d-flex align-center pl-5"
-          style="text-align: left; font-size: 24px"
-        >
-          Preview of Artifact
-        </div> -->
-        <v-img
-          v-if="work.thumbURL"
-          :src="work.thumbURL"
-          width="198px"
-          height="137px"
-        ></v-img>
+        <v-img :src="work.thumbURL"> </v-img>
       </v-card>
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
         <div id="cardbtn1">
@@ -39,7 +28,7 @@
                   size="30"
                   color="#3891A6"
                   style="cursor: pointer"
-                  @click="editWork(work)"
+                  @click="editWork(work), (this.thumbURL = work.thumbURL)"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -49,12 +38,11 @@
             </template>
             <v-card>
               <v-card-title class="headline d-flex justify-center">
-                <div class="mt-4">
-                  Editing an Artifact
-                </div>
+                <div class="mt-4">Editing an Artifact</div>
               </v-card-title>
-              <div class="d-flex flex-column mx-auto" style="width: 400px">
-                <v-col class="pt-10" cols="15">
+              <!-- CONTENT EDIT FEILDS -->
+              <v-row class="d-flex justify-center pt-10 px-15">
+                <v-col>
                   <v-text-field
                     label="Artifact:"
                     background-color="grey lighten-2"
@@ -62,8 +50,6 @@
                     outlined
                     dense
                   ></v-text-field>
-                </v-col>
-                <v-col class="mt-n7" cols="15">
                   <v-textarea
                     v-model="caption"
                     outlined
@@ -73,7 +59,10 @@
                     height="7vw"
                   ></v-textarea>
                 </v-col>
-                <div class="d-flex pl-3 mt-n4 ">
+              </v-row>
+              <!-- IMG PREVIEW -->
+              <v-row class="d-flex justify-center px-15 pb-10">
+                <div class="d-flex">
                   <v-card
                     class="d-block"
                     height="80px"
@@ -81,32 +70,30 @@
                     color="grey lighten-2"
                   >
                     <v-img
-                      v-if="url"
-                      :src="url"
+                      v-if="thumbURL"
+                      :src="thumbURL"
                       height="80px"
                       width="10vw"
                     ></v-img>
                   </v-card>
-
                   <div style="width: 17vw">
-                    <input
-                      class="pl-4"
-                      ref="input1"
-                      type="file"
-                      @change="previewImage"
-                    />
+                    <form id="form">
+                      <input
+                        class="pl-4"
+                        ref="input1"
+                        type="file"
+                        @change="previewImage"
+                      />
+                    </form>
                   </div>
                 </div>
-              </div>
-
+              </v-row>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="cancelHandler">
-                  Cancel
-                </v-btn>
+                <v-btn text @click="cancelHandler"> Cancel </v-btn>
 
                 <!-- Final confirmation on saving edited artifact -->
-                <v-btn color="#3891A6" text @click="submitEditWorkHandler()">
+                <v-btn color="#3891A6" text @click="submitEditWorktHandler">
                   Save
                 </v-btn>
               </v-card-actions>
@@ -132,9 +119,7 @@
             </template>
             <v-card>
               <v-card-title class="headline">
-                <div>
-                  Are you sure you want to delete this artifact?
-                </div>
+                <div>Are you sure you want to delete this artifact?</div>
               </v-card-title>
               <v-card-text
                 >Once the artifact is deleted you can never retrieve
@@ -142,9 +127,7 @@
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="delDialog = false">
-                  Cancel
-                </v-btn>
+                <v-btn text @click="delDialog = false"> Cancel </v-btn>
 
                 <!-- Final confirmation on deleting term -->
                 <v-btn
@@ -161,8 +144,8 @@
         </div>
       </div>
       <div class="d-flex flex-column justify-center pl-6">
-        <div class="d-flex" style="font-size: 24px">
-          Historical Figure {{ work.title }}
+        <div class="d-flex" style="font-size: 24px; text-align: left">
+          Artifact: {{ work.title }}
         </div>
         <div class="d-flex" style="font-size: 18px; text-align: left">
           {{ work.caption }}
@@ -173,16 +156,16 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
 
 export default {
-  data: () => {
+  data() {
     return {
       saveDialog: false,
       delDialog: false,
-      url: null,
+      image: null,
       imageData: null,
     };
   },
@@ -192,10 +175,9 @@ export default {
     ...mapFields("works", [
       "currentWork.title",
       "currentWork.caption",
-      "currentWork.thumbFile",
       "currentWork.thumbURL",
+      "currentWork.thumbFile",
     ]),
-    ...mapGetters("works", ["currentWork"]),
   },
   methods: {
     ...mapActions("works", [
@@ -206,9 +188,6 @@ export default {
       "clearWorkFields",
       "deleteWork",
     ]),
-    mountPreview() {
-      this.url = this.currentWork.thumbURL;
-    },
     previewImage(e) {
       this.uploadValue = 0;
       console.log(e.target.files[0]);
@@ -217,15 +196,14 @@ export default {
       if (fileSize > 2) {
         e.preventDefault();
         alert("File is over 2mb");
+        this.thumbFile = "";
       } else {
-        this.url = URL.createObjectURL(file);
+        this.thumbURL = URL.createObjectURL(file);
         this.imageData = e.target.files[0];
         this.thumbFile = file.name;
-        console.log(this.thumbFile);
-        console.log(this.imageData);
       }
     },
-    async onUpload() {
+    onUpload() {
       const storageRef = firebase
         .storage()
         .ref(`${this.imageData.name}`)
@@ -235,47 +213,42 @@ export default {
         (snapshot) => {
           this.uploadValue =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("step2");
         },
         (error) => {
           console.log(error.message);
         },
-        async () => {
+        () => {
           this.uploadValue = 100;
-          await storageRef.snapshot.ref.getDownloadURL().then((url) => {
+          storageRef.snapshot.ref.getDownloadURL().then((url) => {
             // this.img1 = url;
             // console.log(this.img1);
             this.thumbURL = url;
+            console.log(this.thumbURL);
           });
         }
       );
     },
-    async submitEditWorkHandler() {
+    async submitEditWorktHandler() {
       if (this.imageData) {
-        console.log("with image");
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
           setTimeout(async () => {
             await this.submitEditWork();
-            this.saveDialog = false;
           }, 2000);
         });
       } else {
-        console.log("without image");
         this.thumbFile = "placeHolderImg.png";
         this.thumbURL =
           "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
         setTimeout(async () => {
           await this.submitEditWork();
-          this.saveDialog = false;
         }, 2000);
       }
+      this.saveDialog = false;
+
+      document.getElementById("form").reset();
+      console.log("Submitted Edit");
     },
-    //     submitEditWorktHandler() {
-    //       this.submitEditWork();
-    //       this.saveDialog = false;
-    //       console.log("Submitted Edit");
-    //     },
     cancelHandler() {
       this.clearWorkFields();
       this.clearWorkId();
@@ -286,9 +259,6 @@ export default {
       this.delDialog = false;
       console.log("Deleted");
     },
-  },
-  created() {
-    this.mountPreview();
   },
 };
 </script>

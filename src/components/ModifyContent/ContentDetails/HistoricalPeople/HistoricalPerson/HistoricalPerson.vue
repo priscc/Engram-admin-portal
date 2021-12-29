@@ -12,23 +12,11 @@
         width="198px"
         height="139px"
         outlined
-        style="border: 1px solid #979797;margin: -1px 0px 0px -1px"
+        style="border: 1px solid #979797; margin: -1px 0px 0px -1px"
         color="#D8D8D8"
-        >
-        <!-- <div
-          class="d-flex align-center pl-5"
-          style="text-align: left; font-size: 24px"
-        >
-          Preview of Historical Figure
-        </div> -->
-        <v-img
-          v-if="person.thumbURL"
-          :src="person.thumbURL"
-          width="198px"
-          height="137px"
-        ></v-img>
-        </v-card
       >
+        <v-img :src="person.thumbURL"> </v-img>
+      </v-card>
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
         <div id="cardbtn1">
           <span class="material-icons">
@@ -60,9 +48,7 @@
             </template>
             <v-card>
               <v-card-title class="headline">
-                <div>
-                  Are you sure you want to delete this person?
-                </div>
+                <div>Are you sure you want to delete this person?</div>
               </v-card-title>
               <v-card-text
                 >Once the person is deleted you can never retrieve
@@ -70,9 +56,7 @@
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="dialog = false">
-                  Cancel
-                </v-btn>
+                <v-btn text @click="dialog = false"> Cancel </v-btn>
 
                 <!-- Final confirmation on deleting person -->
                 <v-btn

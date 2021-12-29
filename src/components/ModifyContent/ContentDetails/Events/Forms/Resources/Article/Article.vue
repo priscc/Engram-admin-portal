@@ -2,7 +2,7 @@
   <div class="d-flex pt-4 justify-center align-center">
     <v-card
       class="d-flex"
-      width="25vw"
+      width="319px"
       height="47px"
       outlined
       style="border: 1px solid #979797"
@@ -18,7 +18,7 @@
                   size="20"
                   color="#3891A6"
                   style="cursor: pointer"
-                  @click="handleEditArticle(article)"
+                  @click="editArticle(article)"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -74,21 +74,16 @@
                     <div class="d-flex mt-n2 pl-2">
                       <v-card
                         class="d-block"
-                        height="80px"
-                        width="10vw"
+                        width="6vw"
+                        height="4vw"
                         color="grey lighten-2"
                         outlined
                       >
-                        <v-img
-                          v-if="urlImg"
-                          :src="urlImg"
-                          height="80px"
-                          width="10vw"
-                        ></v-img>
+                        <v-img :src="url"></v-img>
                       </v-card>
 
                       <div style="width: 13vw">
-                        <!-- <v-file-input
+                        <v-file-input
                           class="pt-6 ml-n4"
                           v-model="image"
                           accept="image/*"
@@ -96,16 +91,10 @@
                           append-icon="attach_file"
                           placeholder="Article Thumbnail"
                         >
-                        </v-file-input> -->
-                        <input
-                          class="pl-4"
-                          ref="input1"
-                          type="file"
-                          @change="previewImage"
-                        />
+                        </v-file-input>
                       </div>
                     </div>
-                    <div class="mt-4" style="width: 155px">
+                    <div class="mt-n4" style="width: 155px">
                       <v-text-field
                         class="px-2"
                         v-model="url"
@@ -191,7 +180,6 @@
 <script>
 import { mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
-import firebase from "firebase";
 
 export default {
   data() {
@@ -199,8 +187,6 @@ export default {
       editDialog: false,
       delDialog: false,
       image: null,
-      urlImg: null,
-      imageData: null,
     };
   },
   name: "Article",
@@ -224,32 +210,12 @@ export default {
       "submitEditArticle",
       "deleteArticle",
     ]),
-    mountPreview(article) {
-      this.urlImg = article.thumbURL;
-    },
-    handleEditArticle(article) {
-      this.editArticle(article);
-      this.mountPreview(article);
-    },
     async submitEditArticleHandler() {
-      if (this.imageData) {
-        let imgPromise = Promise.resolve(this.onUpload());
-        await imgPromise.then(async () => {
-          setTimeout(async () => {
-            await this.submitEditArticle();
-            this.editDialog = false;
-            this.fetchContentArticles("event");
-            await this.clearArticleForm();
-          }, 2000);
-        });
-      }
+      await this.submitEditArticle();
+      this.editDialog = false;
+      this.fetchContentArticles("event");
+      await this.clearArticleForm();
     },
-    //     async submitEditArticleHandler() {
-    //       await this.submitEditArticle();
-    //       this.editDialog = false;
-    //       this.fetchContentArticles("event");
-    //       await this.clearArticleForm();
-    //     },
     async deleteArticleHandler(article) {
       await this.deleteArticle(article);
       this.delDialog = false;
@@ -262,45 +228,6 @@ export default {
       this.fetchContentArticles("event");
       await this.clearArticleForm();
       console.log("Cancelled Edit");
-    },
-    previewImage(e) {
-      this.uploadValue = 0;
-      console.log(e.target.files[0]);
-      let file = e.target.files[0];
-      let fileSize = file.size / 1024 / 1024;
-      if (fileSize > 2) {
-        e.preventDefault();
-        alert("File is over 2mb");
-      } else {
-        this.urlImg = URL.createObjectURL(file);
-        this.imageData = e.target.files[0];
-        this.thumbFile = file.name;
-      }
-    },
-    onUpload() {
-      const storageRef = firebase
-        .storage()
-        .ref(`${this.imageData.name}`)
-        .put(this.imageData);
-      storageRef.on(
-        `state_changed`,
-        (snapshot) => {
-          this.uploadValue =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        },
-        (error) => {
-          console.log(error.message);
-        },
-        () => {
-          this.uploadValue = 100;
-          storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            // this.img1 = url;
-            // console.log(this.img1);
-            this.thumbURL = url;
-            console.log(this.thumbURL);
-          });
-        }
-      );
     },
   },
 };
