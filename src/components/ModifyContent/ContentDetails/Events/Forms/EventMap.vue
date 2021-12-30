@@ -44,49 +44,65 @@
           </div>
         </div>
       </v-card>
-      <v-row>
-        <v-col class="d-flex justify-end mr-5">
-          <v-btn class="white--text" width="140" color="#3891A6" elevation="2"
-            >Save</v-btn
-          >
-          <!-- @click="handleSave" -->
-        </v-col>
-      </v-row>
-      <v-row class="mx-4">
-        <v-col id="mapCol">
-          <div class="legend d-flex align-center pb-6">Hover over map</div>
-          <div class="view" id="map"></div>
-        </v-col>
-        <v-col>
-          <v-row>
-            <v-col cols="8" class="d-flex align-start pl-0">
-              <div>Event Coordinates:</div>
-            </v-col>
-            <v-col>
-              <div class="d-flex justify-end">
-                <v-btn class="white--text" small color="#3891A6" elevation="2">
-                  + Map
-                </v-btn>
-                <!-- @click="cleaningCoordinates" -->
-              </div>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-textarea
-              outlined
-              name="input-7-4"
-              filled
-              label="paste coordinates"
-              background-color="grey lighten-2"
-            ></v-textarea>
-          </v-row>
-        </v-col>
-      </v-row>
+      <v-container>
+        <v-row class="mx-4">
+          <v-col id="mapCol">
+            <div class="legend d-flex align-center pb-6">Hover over map</div>
+            <div class="view" id="map"></div>
+          </v-col>
+          <v-col>
+            <v-row>
+              <v-col cols="8" class="d-flex align-start pl-0">
+                <div>Event Coordinates:</div>
+              </v-col>
+              <v-col>
+                <div class="d-flex justify-end">
+                  <v-btn
+                    class="white--text"
+                    @click="cleaningCoordinates"
+                    small
+                    color="#3891A6"
+                    elevation="2"
+                  >
+                    + Map
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+            <v-row class="mt-0">
+              <v-col class="pa-0">
+                <v-switch
+                  v-model="switch1"
+                  :label="`Is an dictionary array: ${switch1.toString()}`"
+                ></v-switch>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-textarea
+                outlined
+                name="input-7-4"
+                v-model="coordinatesMD"
+                filled
+                label="paste coordinates"
+                background-color="grey lighten-2"
+              ></v-textarea>
+            </v-row>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="d-flex justify-end mr-5">
+            <v-btn class="white--text" width="140" color="#3891A6" elevation="2"
+              >Save</v-btn
+            >
+            <!-- @click="handleSave" -->
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
   </div>
 </template>
 
-<!-- <script>
+<script>
 import { mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import countries from "@/countries.json";
@@ -353,35 +369,8 @@ export default {
       path: null,
       svg: null,
       coordinatesMD: "",
-      coordinates: null,
-      // coordinates: [
-      //   [
-      //     { lon: 114.7000004839849, lat: 42.02254999787689 },
-      //     { lon: 113.1672067240925, lat: 40.58903258718775 },
-      //     { lon: 108.5885758869572, lat: 38.01556166653811 },
-      //     { lon: 104.4627858529494, lat: 37.53921058237947 },
-      //     { lon: 102.1835644979335, lat: 34.91691173911467 },
-      //     { lon: 100.999099564981, lat: 33.99707385393174 },
-      //     { lon: 97.18808307950999, lat: 32.3025788858757 },
-      //     { lon: 95.66013730464984, lat: 29.09017865729048 },
-      //     { lon: 98.57342394735846, lat: 28.2005605394243 },
-      //     { lon: 101.8740222074411, lat: 26.13804480224899 },
-      //     { lon: 104.9973476309196, lat: 24.53510765041384 },
-      //     { lon: 106.6435046493752, lat: 22.50452433642101 },
-      //     { lon: 109.5871716936629, lat: 21.25475605332846 },
-      //     { lon: 116.4594192837376, lat: 22.9595454015056 },
-      //     { lon: 120.818784551134, lat: 26.99130045205105 },
-      //     { lon: 122.2920420167496, lat: 30.74267415824754 },
-      //     { lon: 119.3883278138953, lat: 34.83517495263233 },
-      //     { lon: 122.8639669075088, lat: 37.2223767144566 },
-      //     { lon: 120.9378067497715, lat: 38.30397804622267 },
-      //     { lon: 119.5893720324662, lat: 37.42414800444499 },
-      //     { lon: 117.8742460402969, lat: 38.72758280400602 },
-      //     { lon: 118.3845903213028, lat: 39.36174581708054 },
-      //     { lon: 121.5839796969244, lat: 40.71770109427904 },
-      //     { lon: 114.7000004839849, lat: 42.02254999787689 },
-      //   ],
-      // ],
+      switch1: false,
+      coordinates: [],
     };
   },
   computed: {
@@ -394,6 +383,8 @@ export default {
     ...mapActions("events", ["handleSave", "closeForm"]),
     cleaningCoordinates() {
       var str = this.coordinatesMD;
+      console.log(str);
+
       var polygon = [];
       var start = 0;
       var comma = 1;
@@ -415,12 +406,15 @@ export default {
         }
       }
       this.coordinatesMD = "";
+      console.log(this.polygon);
       this.coordinates.push(polygon);
+      console.log(this.coordinates);
       this.primary();
     },
     async primary() {
-      let list = document.getElementById("mapCol");
+      let list = document.getElementById("map");
       if (list != null) {
+        // As long as <ul> has a child node, remove it
         while (list.hasChildNodes()) {
           list.removeChild(list.firstChild);
         }
@@ -499,39 +493,37 @@ export default {
       }
 
       // //This is the accessor function we talked about above
-      // var lineFunction = d3.svg
-      //   .line()
-      //   .x(function(d) {
-      //     var x = projection([d.lon, d.lat]); // [longitude, latitude] -- [x, y]
-      //     return x[0];
-      //   })
-      //   .y(function(d) {
-      //     var x = projection([d.lon, d.lat]); // [longitude, latitude] -- [x, y]
-      //     return x[1];
-      //   })
-      //   .interpolate("linear");
+      var lineFunction = d3.svg
+        .line()
+        .x(function(d) {
+          var x = projection([d.lon, d.lat]); // [longitude, latitude] -- [x, y]
+          return x[0];
+        })
+        .y(function(d) {
+          var x = projection([d.lon, d.lat]); // [longitude, latitude] -- [x, y]
+          return x[1];
+        })
+        .interpolate("linear");
 
-      // //The line SVG Path we draw
-      // // this.coordinates.forEach((polygon) => {
-      // // console.log(polygon);
-      // for (var c = 0; c < this.coordinates.length; c++) {
-      //   console.log(this.coordinates);
-      //   // var polygon = this.coordinates[0];
-      //   // console.log(polygon);
-      //   svg
-      //     .append("path")
-      //     .attr("d", lineFunction(this.coordinates[c]))
-      //     // .attr("stroke", "blue")
-      //     // .attr("stroke-width", 2)
-      //     .attr("fill", "#BDFF00");
-      // }
+      var coordinates = this.coordinates;
+      console.log("in primary" + coordinates);
+
+      for (var c = 0; c < coordinates.length; c++) {
+        console.log("in primary" + coordinates);
+        svg
+          .append("path")
+          .attr("d", lineFunction(coordinates[c]))
+          // .attr("stroke", "blue")
+          // .attr("stroke-width", 2)
+          .attr("fill", "#BDFF00");
+      }
     },
   },
   mounted() {
     this.primary();
   },
 };
-</script> -->
+</script>
 
 <style lang="scss" scoped>
 #nav {
