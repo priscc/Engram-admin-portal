@@ -29,6 +29,7 @@ export default {
       theme: [],
       searchArray: [],
       topicID: [],
+      coordinates: {},
     },
     eventVideos: [],
     eventArticles: [],
@@ -109,6 +110,7 @@ export default {
         theme: [],
         searchArray: [],
         topicID: [],
+        coordinates: {},
       };
       await commit("SET_CURRENT_EVENT", fields);
       await dispatch("clearEventId");

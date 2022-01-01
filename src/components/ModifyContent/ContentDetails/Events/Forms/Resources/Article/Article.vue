@@ -1,14 +1,13 @@
 <template>
-  <div class="d-flex pt-4 justify-center align-center">
+  <div class="pt-4">
     <v-card
-      class="d-flex"
       width="319px"
-      height="47px"
+      height="auto"
       outlined
       style="border: 1px solid #979797"
     >
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
-        <div id="cardbtn1">
+        <div>
           <!-- Modal when editing an article -->
           <v-dialog v-model="editDialog" persistent max-width="500">
             <template v-slot:activator="{ on, attrs }">
@@ -119,8 +118,6 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- Modal  -->
-
           <!-- Modal when deleting an article -->
           <v-dialog v-model="delDialog" persistent max-width="250">
             <template v-slot:activator="{ on, attrs }">
@@ -165,11 +162,11 @@
           <!-- Modal  -->
         </div>
       </div>
-      <div class="font-weight-regular d-flex flex-column flex-start pt-2 pl-4">
-        <div class="d-flex" style="font-size: 14px">
-          Article Title: {{ article.title }}
-        </div>
-        <div class="d-flex" style="font-size: 10px">
+      <div
+        class="font-weight-regular d-flex flex-column text-left text-sm pt-6 pl-4"
+      >
+        <div style="font-size: 14px">Article Title: {{ article.title }}</div>
+        <div class="py-1" style="font-size: 10px">
           {{ article.url }}
         </div>
       </div>

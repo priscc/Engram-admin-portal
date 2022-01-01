@@ -1,102 +1,71 @@
 <template>
   <div id="EventMap">
-    <v-card class="mx-auto mt-4" width="62vw" height="40vw">
-      <v-card class="mx-auto" width="62vw" height="5vw" color="#273238">
-        <div class="d-flex">
-          <v-container class="pt-8 pl-12 d-flex">
-            <div id="nav">
-              <router-link
-                class="col"
-                to="/addcontent/modifycontent/events/general"
-                exact
-                >General</router-link
-              >
-              <router-link
-                class="col"
-                to="/addcontent/modifycontent/events/map"
-                exact
-                >Map</router-link
-              >
-              <router-link
-                class="col"
-                to="/addcontent/modifycontent/events/text"
-                exact
-                >Text</router-link
-              >
-              <router-link
-                class="col"
-                to="/addcontent/modifycontent/events/resources"
-                exact
-                >Resources</router-link
-              >
-            </div>
-          </v-container>
-          <div class="d-flex justify-end">
-            <span class="material-icons">
-              <v-icon
-                size="40"
-                color="#3891A6"
-                @click="closeForm('Events', '/events')"
-              >
-                disabled_by_default
-              </v-icon>
-            </span>
-          </div>
+    <v-card class="mx-auto mt-4 pb-6" width="62vw" height="auto">
+      <navbar />
+      <v-container class="px-10">
+        <div class="d-flex justify-end">
+          <v-btn
+            class="white--text"
+            width="140"
+            color="#3891A6"
+            elevation="2"
+            :disabled="Object.keys(this.coordinates).length == 0"
+            @click="handleSave"
+          >
+            Save
+          </v-btn>
         </div>
-      </v-card>
-      <v-container>
-        <v-row class="mx-4">
-          <v-col id="mapCol">
-            <div class="legend d-flex align-center pb-6">Hover over map</div>
-            <div class="view" id="map"></div>
-          </v-col>
+        <v-row>
           <v-col>
-            <v-row>
-              <v-col cols="8" class="d-flex align-start pl-0">
-                <div>Event Coordinates:</div>
-              </v-col>
-              <v-col>
-                <div class="d-flex justify-end">
-                  <v-btn
-                    class="white--text"
-                    @click="cleaningCoordinates"
-                    small
-                    color="#3891A6"
-                    elevation="2"
-                  >
-                    + Map
-                  </v-btn>
-                </div>
-              </v-col>
-            </v-row>
-            <v-row class="mt-0">
-              <v-col class="pa-0">
-                <v-switch
-                  v-model="switch1"
-                  :label="`Is an dictionary array: ${switch1.toString()}`"
-                ></v-switch>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-textarea
-                outlined
-                name="input-7-4"
-                v-model="coordinatesMD"
-                filled
-                label="paste coordinates"
-                background-color="grey lighten-2"
-              ></v-textarea>
-            </v-row>
+            <div class="d-flex justify-start font-weight-bold">
+              Event Coordinates:
+            </div>
+            <v-switch
+              v-model="switch1"
+              :label="`Is an dictionary array: ${switch1.toString()}`"
+            ></v-switch>
+            <v-textarea
+              outlined
+              v-model="coordinatesMD"
+              filled
+              label="paste coordinates"
+              rows="3"
+              row-height="30"
+            ></v-textarea>
+            <div class="d-flex justify-end">
+              <v-btn
+                class="white--text"
+                @click="cleaningCoordinates"
+                small
+                color="#3891A6"
+                elevation="2"
+              >
+                Add Map
+              </v-btn>
+            </div>
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="d-flex justify-end mr-5">
-            <v-btn class="white--text" width="140" color="#3891A6" elevation="2"
-              >Save</v-btn
-            >
-            <!-- @click="handleSave" -->
+          <v-col id="mapCol">
+            <div class="legend d-flex align-center pb-2 font-weight-bold">
+              View coordinates added in below map
+            </div>
+            <div class="d-flex justify-start pb-10">
+              <v-btn
+                @click="clearingCoordinates"
+                outlined
+                color="#3891A6"
+                :disabled="Object.keys(this.coordinates).length == 0"
+                small
+              >
+                Clear
+              </v-btn>
+            </div>
+
+            <div class="view" id="map"></div>
           </v-col>
         </v-row>
+        <v-row> </v-row>
       </v-container>
     </v-card>
   </div>
@@ -108,8 +77,10 @@ import { mapFields } from "vuex-map-fields";
 import countries from "@/countries.json";
 import * as d3 from "d3";
 import * as topojson from "topojson";
+import navbar from "./EventCardHeader.vue";
 
 export default {
+  components: { navbar },
   data() {
     return {
       items: countries,
@@ -370,20 +341,15 @@ export default {
       svg: null,
       coordinatesMD: "",
       switch1: false,
-      coordinates: [],
     };
   },
   computed: {
-    ...mapFields("events", [
-      "currentEvent.descriptionMD",
-      "currentEvent.mainMD",
-    ]),
+    ...mapFields("events", { coordinates: "currentEvent.coordinates" }),
   },
   methods: {
     ...mapActions("events", ["handleSave", "closeForm"]),
     cleaningCoordinates() {
       var str = this.coordinatesMD;
-      console.log(str);
 
       var polygon = [];
       var start = 0;
@@ -406,15 +372,19 @@ export default {
         }
       }
       this.coordinatesMD = "";
-      console.log(this.polygon);
-      this.coordinates.push(polygon);
-      console.log(this.coordinates);
+      var key = Object.keys(this.coordinates).length + 1;
+      this.coordinates[key] = polygon;
+      this.primary();
+    },
+    clearingCoordinates() {
+      this.coordinatesMD = "";
+      this.coordinates = {};
       this.primary();
     },
     async primary() {
       let list = document.getElementById("map");
       if (list != null) {
-        // As long as <ul> has a child node, remove it
+        // erase map
         while (list.hasChildNodes()) {
           list.removeChild(list.firstChild);
         }
@@ -422,7 +392,7 @@ export default {
 
       d3.select(window).on("resize", this.resize);
 
-      var width = 5 * document.querySelector("#mapCol").offsetWidth;
+      var width = 3.1 * document.querySelector("#map").offsetWidth;
       var mapRatio = 0.7;
       var height = width * mapRatio;
 
@@ -477,22 +447,21 @@ export default {
           .attr("class", "regions selected")
           .attr("d", path)
           .attr({ "data-name": this.sets[i].name })
-          .attr("fill", "#464646")
-          .on("mouseover", function() {
-            var region = d3.select(this);
-            region.attr("fill", "#ff9800");
-            document.querySelector(".legend").innerText = region.attr(
-              "data-name"
-            );
-          })
-          .on("mouseout", function() {
-            var region = d3.select(this);
-            region.attr("fill", "#464646");
-            document.querySelector(".legend").innerText = "Hover of Map";
-          });
+          .attr("fill", "#464646");
+        // .on("mouseover", function() {
+        //   var region = d3.select(this);
+        //   region.attr("fill", "#ff9800");
+        //   document.querySelector(".legend").innerText = region.attr(
+        //     "data-name"
+        //   );
+        // })
+        // .on("mouseout", function() {
+        //   var region = d3.select(this);
+        //   region.attr("fill", "#464646");
+        //   document.querySelector(".legend").innerText = "Hover of Map";
+        // });
       }
 
-      // //This is the accessor function we talked about above
       var lineFunction = d3.svg
         .line()
         .x(function(d) {
@@ -508,15 +477,14 @@ export default {
       var coordinates = this.coordinates;
       console.log("in primary" + coordinates);
 
-      for (var c = 0; c < coordinates.length; c++) {
-        console.log("in primary" + coordinates);
+      Object.keys(coordinates).forEach((map) => {
         svg
           .append("path")
-          .attr("d", lineFunction(coordinates[c]))
-          // .attr("stroke", "blue")
-          // .attr("stroke-width", 2)
+          .attr("d", lineFunction(coordinates[map]))
+          .attr("stroke", "red")
+          .attr("stroke-width", 2)
           .attr("fill", "#BDFF00");
-      }
+      });
     },
   },
   mounted() {
@@ -525,18 +493,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-#nav {
-  a {
-    padding: 4px 24px;
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: lighter;
-    background-color: #5b6368;
-
-    &.router-link-exact-active {
-      background-color: #3891a6;
-    }
-  }
-}
-</style>
+<style></style>

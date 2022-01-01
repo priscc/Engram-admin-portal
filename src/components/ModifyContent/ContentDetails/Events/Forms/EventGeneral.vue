@@ -1,52 +1,8 @@
 <template>
   <div id="EventInfo">
     <v-form>
-      <v-card class="mx-auto mt-4" width="62vw" height="35vw">
-        <v-card class="mx-auto" width="62vw" height="5vw" color="#273238">
-          <div class="d-flex">
-            <v-container class="pt-8 pl-12 d-flex">
-              <div id="nav">
-                <router-link
-                  class="col"
-                  to="/addcontent/modifycontent/events/general"
-                  exact
-                  >General</router-link
-                >
-                <router-link
-                  class="col"
-                  to="/addcontent/modifycontent/events/map"
-                  exact
-                  >Map</router-link
-                >
-                <router-link
-                  class="col"
-                  :event="routeValidation ? 'click' : ''"
-                  to="/addcontent/modifycontent/events/text"
-                  exact
-                  >Text</router-link
-                >
-                <router-link
-                  class="col"
-                  :event="routeValidation ? 'click' : ''"
-                  to="/addcontent/modifycontent/events/resources"
-                  exact
-                  >Resources</router-link
-                >
-              </div>
-            </v-container>
-            <div class="d-flex justify-end">
-              <span class="material-icons">
-                <v-icon
-                  size="40"
-                  color="#3891A6"
-                  @click="closeForm('Events', '/events')"
-                >
-                  disabled_by_default
-                </v-icon>
-              </span>
-            </div>
-          </div>
-        </v-card>
+      <v-card class="mx-auto mt-4 pb-6" width="62vw" height="auto">
+        <navbar />
         <v-col class="pl-12 pt-9" cols="10" sm="9" md="11">
           <v-text-field
             v-model="title"
@@ -158,8 +114,10 @@
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
+import navbar from "./EventCardHeader.vue";
 
 export default {
+  components: { navbar },
   data: () => ({
     // title: null,
     image: null,
@@ -309,23 +267,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-#imageThumbnail {
-  width: 15vw;
-  height: 10vw;
-  background-color: #5b6368;
-}
-#nav {
-  a {
-    padding: 4px 24px;
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: lighter;
-    background-color: #5b6368;
-
-    &.router-link-exact-active {
-      background-color: #3891a6;
-    }
-  }
-}
-</style>
+<style></style>
