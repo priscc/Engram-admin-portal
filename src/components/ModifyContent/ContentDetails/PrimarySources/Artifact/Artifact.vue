@@ -3,17 +3,17 @@
     <v-card
       class="d-flex"
       width="580px"
-      height="139px"
+      height="auto"
       outlined
       style="border: 1px solid #979797"
     >
       <v-card
-        class="d-flex"
+        v-if="work.thumbURL"
+        class="d-flex ma-1"
         width="198px"
         height="139px"
+        tile
         outlined
-        style="border: 1px solid #979797; margin: -1px 0px 0px -1px"
-        color="#D8D8D8"
       >
         <v-img :src="work.thumbURL"> </v-img>
       </v-card>
@@ -22,19 +22,18 @@
           <!-- Modal when editing an artifact -->
           <v-dialog v-model="saveDialog" persistent max-width="500">
             <template v-slot:activator="{ on, attrs }">
-              <span class="material-icons">
-                <v-icon
-                  class="d-flex"
-                  size="30"
-                  color="#3891A6"
-                  style="cursor: pointer"
-                  @click="editWork(work), (this.thumbURL = work.thumbURL)"
-                  v-bind="attrs"
-                  v-on="on"
-                >
+              <v-btn
+                color="#3891A6"
+                @click="editWork(work), (this.thumbURL = work.thumbURL)"
+                v-bind="attrs"
+                v-on="on"
+                icon
+                small
+              >
+                <v-icon>
                   create
                 </v-icon>
-              </span>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title class="headline d-flex justify-center">
@@ -99,23 +98,14 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- Modal  -->
-
           <!-- Modal when deleting a term -->
           <v-dialog v-model="delDialog" persistent max-width="260">
             <template v-slot:activator="{ on, attrs }">
-              <span class="material-icons">
-                <v-icon
-                  class="d-flex"
-                  size="30"
-                  color="#3891A6"
-                  style="cursor: pointer"
-                  v-bind="attrs"
-                  v-on="on"
-                >
+              <v-btn color="#3891A6" v-bind="attrs" v-on="on" icon small>
+                <v-icon>
                   disabled_by_default
                 </v-icon>
-              </span>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title class="headline">
@@ -143,11 +133,11 @@
           <!-- Modal  -->
         </div>
       </div>
-      <div class="d-flex flex-column justify-center pl-6">
-        <div class="d-flex" style="font-size: 24px; text-align: left">
+      <div class="d-flex flex-column pt-6 pl-6">
+        <div class="text-left text-h6 font-weight-medium">
           Artifact: {{ work.title }}
         </div>
-        <div class="d-flex" style="font-size: 18px; text-align: left">
+        <div class="text-left subtitle-1 py-2" style="line-height: 20px">
           {{ work.caption }}
         </div>
       </div>

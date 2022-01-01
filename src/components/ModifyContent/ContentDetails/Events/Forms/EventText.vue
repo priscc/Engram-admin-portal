@@ -29,8 +29,8 @@
               color="#3891A6"
               elevation="2"
               @click="handleSave"
-              >Save</v-btn
-            >
+              >Save
+            </v-btn>
           </div>
         </v-col>
       </v-row>

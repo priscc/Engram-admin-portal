@@ -1,57 +1,7 @@
 <template>
   <div id="modifyContent">
     <v-container fluid>
-      <!-- TITLE -->
-      <v-row>
-        <v-col>
-          <div class="d-flex flex-start">
-            <v-btn
-              fab
-              text
-              @click="
-                $router.push({ name: 'ModifyContent', path: '/modifycontent' })
-              "
-            >
-              <v-icon size="42" color="#3891A6">
-                mdi-arrow-left-drop-circle
-              </v-icon>
-            </v-btn>
-            <div style="font-size: 36px">Modifying Topic Content</div>
-          </div>
-        </v-col>
-      </v-row>
-      <!-- TABS -->
-      <v-row>
-        <v-col>
-          <v-card id="nav" rounded class="py-6 px-3" color="#273238">
-            <v-tabs v-model="tab" grow show-arrows>
-              <v-tabs-slider color="white"></v-tabs-slider>
-              <v-tab style="background-color: #3891a6">
-                <router-link to="/addcontent/modifycontent/events">
-                  Events
-                </router-link>
-              </v-tab>
-
-              <v-tab style="background-color: #5b6368">
-                <router-link to="/addcontent/modifycontent/historicalpeople">
-                  Historical People
-                </router-link>
-              </v-tab>
-
-              <v-tab style="background-color: #5b6368">
-                <router-link to="/addcontent/modifycontent/terminology">
-                  Terminology
-                </router-link>
-              </v-tab>
-              <v-tab style="background-color: #5b6368">
-                <router-link to="/addcontent/modifycontent/primarysources">
-                  Primary Sources
-                </router-link>
-              </v-tab>
-            </v-tabs>
-          </v-card>
-        </v-col>
-      </v-row>
+      <navbar />
       <!-- ADDING CONTENT -->
       <v-row>
         <!-- ADD CONTENT BUTTON -->
@@ -96,6 +46,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import Event from "./Event/Event.vue";
+import navbar from "../ModifyContentHeader.vue";
 
 export default {
   data() {
@@ -110,7 +61,7 @@ export default {
       tab: 0,
     };
   },
-  components: { Event },
+  components: { Event, navbar },
   computed: { ...mapGetters("events", ["currentTopicEvents"]) },
   methods: {
     ...mapActions("events", [

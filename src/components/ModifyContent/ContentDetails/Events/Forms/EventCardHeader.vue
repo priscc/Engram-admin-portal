@@ -1,8 +1,8 @@
 <template>
   <div id="EventHeader">
-    <v-container class="mb-6" fluid style="background-color: #273238" id="nav">
+    <v-container class="mb-6" style="background-color: #273238" id="nav">
       <v-row>
-        <v-col class="pb-0 d-flex justify-end">
+        <v-col class="d-flex pb-0 justify-end">
           <v-icon
             large
             rounded
@@ -13,8 +13,8 @@
           </v-icon>
         </v-col>
       </v-row>
-      <v-row class="ma-0">
-        <v-col>
+      <v-row class="mt-0">
+        <v-col class="d-flex justify-start" v-if="this.currentEventId">
           <router-link to="/addcontent/modifycontent/events/general" exact
             >General</router-link
           >
@@ -28,21 +28,29 @@
             >Resources</router-link
           >
         </v-col>
+        <v-col class="pt-0" v-else>
+          <div class="d-flex justify-start white--text text-h6">
+            Create a new event:
+          </div>
+        </v-col>
       </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   methods: {
     ...mapActions("events", ["closeForm"]),
   },
+  computed: {
+    ...mapGetters("events", ["currentEvent", "currentEventId"]),
+  },
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 #nav {
   a {
     padding: 4px 24px;

@@ -1,155 +1,140 @@
 <template>
-  <v-card
-    class="d-flex"
-    height="160px"
-    outlined
-    style="border: 1px solid #979797"
-  >
+  <div class="d-flex pt-4 justify-center align-center">
     <v-card
       class="d-flex"
-      width="198px"
-      height="160px"
+      width="580px"
+      height="auto"
       outlined
-      style="border: 1px solid #979797; margin: -1px 0px 0px -1px"
-      color="#D8D8D8"
+      style="border: 1px solid #979797"
     >
-      <v-img :src="topicTerm.thumbURL"> </v-img>
-    </v-card>
-    <div class="d-flex flex-column" style="position: absolute; right: 0px">
-      <div id="cardbtn1">
-        <!-- Modal when editing a term -->
-        <v-dialog v-model="saveDialog" persistent max-width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <span class="material-icons">
-              <v-icon
-                class="d-flex"
-                size="30"
+      <v-card class="d-flex ma-1" width="160px" height="160px" outlined tile>
+        <v-img :src="topicTerm.thumbURL"> </v-img>
+      </v-card>
+      <div class="d-flex flex-column" style="position: absolute; right: 0px">
+        <div>
+          <!-- Modal when editing a term -->
+          <v-dialog v-model="saveDialog" persistent max-width="500">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
                 color="#3891A6"
-                style="cursor: pointer"
+                v-bind="attrs"
+                v-on="on"
                 @click="
                   editTerm(topicTerm), (this.thumbURL = topicTerm.thumbURL)
                 "
-                v-bind="attrs"
-                v-on="on"
+                icon
+                small
               >
-                create
-              </v-icon>
-            </span>
-          </template>
-          <v-card>
-            <v-card-title class="headline d-flex justify-center">
-              <div class="mt-4">Editing a term</div>
-            </v-card-title>
-            <v-row class="d-flex justify-center pt-10 px-15">
-              <v-col>
-                <v-text-field
-                  label="Term:"
-                  background-color="grey lighten-2"
-                  v-model="term"
-                  outlined
-                  dense
-                ></v-text-field>
-                <v-textarea
-                  v-model="def"
-                  outlined
-                  name="input-7-4"
-                  label="Definition:"
-                  background-color="grey lighten-2"
-                  height="7vw"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-            <!-- IMG PREVIEW -->
-            <v-row class="d-flex justify-center px-15 pb-10">
-              <div class="d-flex">
-                <v-card
-                  class="d-block"
-                  height="80px"
-                  width="10vw"
-                  color="grey lighten-2"
-                >
-                  <v-img
-                    v-if="thumbURL"
-                    :src="thumbURL"
+                <v-icon>
+                  create
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="headline d-flex justify-center">
+                <div class="mt-4">Editing a term</div>
+              </v-card-title>
+              <v-row class="d-flex justify-center pt-10 px-15">
+                <v-col>
+                  <v-text-field
+                    label="Term:"
+                    background-color="grey lighten-2"
+                    v-model="term"
+                    outlined
+                    dense
+                  ></v-text-field>
+                  <v-textarea
+                    v-model="def"
+                    outlined
+                    name="input-7-4"
+                    label="Definition:"
+                    background-color="grey lighten-2"
+                    height="7vw"
+                  ></v-textarea>
+                </v-col>
+              </v-row>
+              <!-- IMG PREVIEW -->
+              <v-row class="d-flex justify-center px-15 pb-10">
+                <div class="d-flex">
+                  <v-card
+                    class="d-block"
                     height="80px"
                     width="10vw"
-                  ></v-img>
-                </v-card>
-                <div style="width: 17vw">
-                  <form id="form">
-                    <input
-                      class="pl-4"
-                      ref="input1"
-                      type="file"
-                      @change="previewImage"
-                    />
-                  </form>
+                    color="grey lighten-2"
+                  >
+                    <v-img
+                      v-if="thumbURL"
+                      :src="thumbURL"
+                      height="80px"
+                      width="10vw"
+                    ></v-img>
+                  </v-card>
+                  <div style="width: 17vw">
+                    <form id="form">
+                      <input
+                        class="pl-4"
+                        ref="input1"
+                        type="file"
+                        @change="previewImage"
+                      />
+                    </form>
+                  </div>
                 </div>
-              </div>
-            </v-row>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn text @click="cancelHandler"> Cancel </v-btn>
+              </v-row>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="cancelHandler"> Cancel </v-btn>
 
-              <!-- Final confirmation on saving edited term -->
-              <v-btn color="#3891A6" text @click="submitTermHandler">
-                Save
+                <!-- Final confirmation on saving edited term -->
+                <v-btn color="#3891A6" text @click="submitTermHandler">
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- Modal when deleting a term -->
+          <v-dialog v-model="delDialog" persistent max-width="250">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="#3891A6" v-bind="attrs" v-on="on" icon small>
+                <v-icon>
+                  disabled_by_default
+                </v-icon>
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <!-- Modal  -->
-
-        <!-- Modal when deleting a term -->
-        <v-dialog v-model="delDialog" persistent max-width="250">
-          <template v-slot:activator="{ on, attrs }">
-            <span class="material-icons">
-              <v-icon
-                class="d-flex"
-                size="30"
-                color="#3891A6"
-                style="cursor: pointer"
-                v-bind="attrs"
-                v-on="on"
+            </template>
+            <v-card>
+              <v-card-title class="headline">
+                <div>Are you sure you want to delete this term?</div>
+              </v-card-title>
+              <v-card-text
+                >Once the term is deleted you can never retrieve it</v-card-text
               >
-                disabled_by_default
-              </v-icon>
-            </span>
-          </template>
-          <v-card>
-            <v-card-title class="headline">
-              <div>Are you sure you want to delete this term?</div>
-            </v-card-title>
-            <v-card-text
-              >Once the term is deleted you can never retrieve it</v-card-text
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn text @click="delDialog = false"> Cancel </v-btn>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="delDialog = false"> Cancel </v-btn>
 
-              <!-- Final confirmation on deleting term -->
-              <v-btn
-                color="red darken-1"
-                text
-                @click="deleteTermHandler(topicTerm)"
-              >
-                Yes, delete
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <!-- Modal  -->
+                <!-- Final confirmation on deleting term -->
+                <v-btn
+                  color="red darken-1"
+                  text
+                  @click="deleteTermHandler(topicTerm)"
+                >
+                  Yes, delete
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
       </div>
-    </div>
-    <div class="d-flex flex-column justify-center pl-6">
-      <div class="d-flex" style="font-size: 24px; text-align: left">
-        {{ topicTerm.term }}
+      <div class="d-flex flex-column pt-6 pl-4 pr-2">
+        <div class="text-left text-h6 font-weight-medium">
+          {{ topicTerm.term }}
+        </div>
+        <div class="text-left subtitle-1 py-2" style="line-height: 20px">
+          {{ topicTerm.def }}
+        </div>
       </div>
-      <div style="font-size: 18px; text-align: left">
-        {{ topicTerm.def }}
-      </div>
-    </div>
-  </v-card>
+    </v-card>
+  </div>
 </template>
 
 <script>

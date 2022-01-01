@@ -18,33 +18,20 @@
         <v-img :src="person.thumbURL"> </v-img>
       </v-card>
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
-        <div id="cardbtn1">
-          <span class="material-icons">
-            <v-icon
-              class="d-flex"
-              size="30"
-              color="#3891A6"
-              style="cursor: pointer"
-              @click="handleEdit(person)"
-            >
+        <div>
+          <v-btn color="#3891A6" @click="handleEdit(person)" icon small>
+            <v-icon>
               create
             </v-icon>
-          </span>
+          </v-btn>
           <!-- Modal when deleting a person -->
           <v-dialog v-model="dialog" persistent max-width="250">
             <template v-slot:activator="{ on, attrs }">
-              <span class="material-icons">
-                <v-icon
-                  class="d-flex"
-                  size="30"
-                  color="#3891A6"
-                  style="cursor: pointer"
-                  v-bind="attrs"
-                  v-on="on"
-                >
+              <v-btn color="#3891A6" v-bind="attrs" v-on="on" icon small>
+                <v-icon>
                   disabled_by_default
                 </v-icon>
-              </span>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title class="headline">
@@ -69,10 +56,9 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- Modal  -->
         </div>
       </div>
-      <div class="d-flex flex-column justify-center pl-6">
+      <div class="d-flex flex-column pt-6 pl-6">
         <div class="d-flex" style="font-size: 24px">
           {{ person.name }}
         </div>

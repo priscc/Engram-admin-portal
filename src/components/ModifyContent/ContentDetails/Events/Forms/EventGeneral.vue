@@ -245,6 +245,7 @@ export default {
     },
     async handleSaveEvent() {
       if (this.imageData) {
+        console.log("this.imageData", this.imageData);
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
           setTimeout(async () => {
