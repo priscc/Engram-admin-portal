@@ -23,7 +23,6 @@
           </p>
           <div>
             <v-select
-              disabled
               v-model="selectedPeriod"
               :items="timePeriod"
               :menu-props="{ top: false, offsetY: false }"
