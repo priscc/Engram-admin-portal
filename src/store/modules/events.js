@@ -60,7 +60,7 @@ export default {
     setEventTopicId({ rootState, state, commit }) {
       console.log(rootState.topics.topicID);
       commit("SET_EVENT_TOPIC_ID", rootState.topics.topicID);
-      console.log(state.currentEvent.topicID);
+      console.log("set event topicid",  state.currentEvent.topicID);
     },
 
     //* fetch all events under current topic id
@@ -78,16 +78,25 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.docs.map((doc) => {
             let eventItem = doc.data();
-
             //* appends unique event id to each event
+            //* appends coordinates field if event does not yet have it
+            if(eventItem.coordinates == null ){
+              eventsList.push({
+                ...eventItem,
+                id: doc.id,
+                coordinates: {}
+              });
+            }
+            else{
             eventsList.push({
               ...eventItem,
-              id: doc.id,
+              id: doc.id
             });
+          }
           });
           commit("SET_TOPIC_EVENTS", eventsList);
         });
-      // console.log(state.topicId);
+      console.log("eventsList", eventsList);
     },
 
     //* handler for add event button, clears the fields

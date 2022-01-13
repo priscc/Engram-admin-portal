@@ -392,7 +392,7 @@ export default {
 
       d3.select(window).on("resize", this.resize);
 
-      var width = 3.1 * document.querySelector("#map").offsetWidth;
+      var width = 3.1 * document.querySelector("#mapCol").offsetWidth;
       var mapRatio = 0.7;
       var height = width * mapRatio;
 
@@ -477,7 +477,9 @@ export default {
       var coordinates = this.coordinates;
       console.log("in primary" + coordinates);
 
+
       Object.keys(coordinates).forEach((map) => {
+        console.log("in foreach" + map);
         svg
           .append("path")
           .attr("d", lineFunction(coordinates[map]))
