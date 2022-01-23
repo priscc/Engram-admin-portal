@@ -1,14 +1,13 @@
 <template>
-  <div class="d-flex pt-4 justify-center align-center">
+  <div class="pt-4" id="TopicAricle">
     <v-card
-      class="d-flex"
-      width="25vw"
-      height="47px"
+      width="319px"
+      height="auto"
       outlined
       style="border: 1px solid #979797"
     >
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
-        <div id="cardbtn1">
+        <div>
           <!-- Modal when editing an article -->
           <v-dialog v-model="editDialog" persistent max-width="500">
             <template v-slot:activator="{ on, attrs }">
@@ -79,26 +78,10 @@
                         color="grey lighten-2"
                         outlined
                       >
-                        <!-- <v-img :src="urlImg"></v-img> -->
-                        <!-- <v-img v-if="url" :src="url" height="80px" width="10vw"></v-img> -->
-                        <v-img
-                          v-if="urlImg"
-                          :src="urlImg"
-                          height="80px"
-                          width="10vw"
-                        ></v-img>
+                        <v-img :src="urlImg"></v-img>
                       </v-card>
 
                       <div style="width: 13vw">
-                        <!-- <v-file-input
-                          class="pt-6 ml-n4"
-                          v-model="image"
-                          accept="image/*"
-                          prepend-icon="none"
-                          append-icon="attach_file"
-                          placeholder="Article Thumbnail"
-                        >
-                        </v-file-input> -->
                         <input
                           class="pl-4"
                           ref="input1"
@@ -107,7 +90,7 @@
                         />
                       </div>
                     </div>
-                    <div class="mt-4" style="width: 155px">
+                    <div class="mt-4">
                       <v-text-field
                         class="px-2"
                         v-model="url"
@@ -178,7 +161,9 @@
           <!-- Modal  -->
         </div>
       </div>
-      <div class="font-weight-regular d-flex flex-column flex-start pt-2 pl-4">
+      <div
+        class="font-weight-regular d-flex flex-column text-left text-sm pt-6 pl-4"
+      >
         <div class="d-flex" style="font-size: 14px">
           Article Title: {{ article.title }}
         </div>
@@ -194,7 +179,6 @@
 import { mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
-
 export default {
   data() {
     return {
@@ -247,7 +231,6 @@ export default {
           }, 2000);
         });
       }
-
       // await this.submitEditArticle();
       // this.editDialog = false;
       // this.fetchArticles("topic");

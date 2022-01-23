@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-4">
+  <div class="pt-4" id="EventArticle">
     <v-card
       width="319px"
       height="auto"
@@ -93,7 +93,7 @@
                         </v-file-input>
                       </div>
                     </div>
-                    <div class="mt-n4" style="width: 155px">
+                    <div class="pt-2">
                       <v-text-field
                         class="px-2"
                         v-model="url"

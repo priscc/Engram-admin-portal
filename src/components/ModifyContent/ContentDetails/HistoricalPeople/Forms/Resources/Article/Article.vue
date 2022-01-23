@@ -1,9 +1,8 @@
 <template>
-  <div class="d-flex pt-4 justify-center align-center">
+  <div class="pt-4">
     <v-card
-      class="d-flex"
       width="319px"
-      height="47px"
+      height="auto"
       outlined
       style="border: 1px solid #979797"
     >

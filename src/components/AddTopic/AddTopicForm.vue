@@ -1,77 +1,50 @@
 <template>
   <div id="addTopic">
-    <v-container fluid>
+    <v-container>
+      <Header
+        v-bind:header="'Adding New Topic'"
+        v-bind:description="
+          'Add a new topic to the Engram home page by filling in basic information.'
+        "
+        v-bind:links="[]"
+      />
       <v-row>
-        <v-col>
-          <div class="d-flex flex-start">
-            <v-btn fab text @click="$router.push({ path: '/addcontent' })">
-              <v-icon size="42" color="#3891A6">
-                mdi-arrow-left-drop-circle
-              </v-icon>
-            </v-btn>
-            <div style="font-size: 36px">Adding a Topic</div>
+        <v-col cols="6" class="pt-10">
+          <div class="d-flex align-end">
+            <v-card width="200" height="150" color="grey lighten-2" outlined>
+              <v-img v-if="url" :src="url" height="100%" width="100%"></v-img>
+            </v-card>
+            <input
+              id="imginput"
+              class="pl-4"
+              ref="input1"
+              type="file"
+              @change="previewImage"
+            />
           </div>
 
-          <div
-            class="d-flex justify-center align-center pa-2 white--text font-italic"
-            width="100%"
-            style="
-              background-color: #273238;
-              font-size: 18px;
-              border-radius: 4px;
-            "
+          <v-text-field
+            label="Topic title:"
+            background-color="grey lighten-2"
+            v-model="title"
+            outlined
+            dense
+            class="pt-5"
+          ></v-text-field>
+          <v-select
+            v-model="timePeriod"
+            :items="timePeriodChoices"
+            label="Time Period"
+            background-color="grey lighten-2"
+            outlined
+            dense
+            class="pt-5"
           >
-            Add a new topic to the Study Bites home page by filling in basic
-            information.
-          </div>
+          </v-select>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-col class="mx-auto pt-10" cols="10" sm="9" md="11">
-            <v-text-field
-              label="Topic title:"
-              background-color="grey lighten-2"
-              v-model="title"
-              outlined
-              dense
-            ></v-text-field>
-          </v-col>
-          <v-col class="mx-auto mt-n3" cols="10" sm="9" md="11">
-            <div class="d-flex flex-start mt-n4">
-              <v-card
-                class="d-block"
-                width="10vw"
-                height="5vw"
-                color="grey lighten-2"
-                outlined
-              >
-                <v-img v-if="url" :src="url" height="80px" width="10vw"></v-img>
-              </v-card>
-
-              <div style="width: 15vw; height: 5vw">
-                <input
-                  class="pl-4"
-                  ref="input1"
-                  type="file"
-                  @change="previewImage"
-                />
-              </div>
-            </div>
-          </v-col>
-          <v-col class="mx-auto pt-10" cols="10" sm="9" md="11">
-            <div class="d-flex flex-start mt-n4" style="width: 22vw">
-              <v-select
-                v-model="timePeriod"
-                :items="timePeriodChoices"
-                label="Time Period"
-                background-color="grey lighten-2"
-                outlined
-                dense
-              >
-              </v-select>
-            </div>
-          </v-col>
           <div class="d-flex justify-end pr-12">
             <v-btn
               class="white--text"
@@ -79,6 +52,7 @@
               color="#3891A6"
               :disabled="!checkfield"
               elevation="2"
+              @click="resetFields"
               >Reset</v-btn
             >
           </div>
@@ -102,8 +76,10 @@
 import { mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
+import Header from "../DashboardHeaders.vue";
 
 export default {
+  components: { Header },
   data: () => ({
     image: null,
     timePeriodChoices: [1, 2, 3, 4],
@@ -138,34 +114,15 @@ export default {
   },
 
   methods: {
+    ...mapActions("topics", ["submitNewTopic", "clearFields", "clearTopicId"]),
     toggle() {
       this.$nextTick(() => {
         this.selectedPeriod = [this.timePeriod.slice()];
       });
     },
-    resetbtn(e) {
-      if (this.checkfield) {
-        this.disabled = 0;
-      }
-      e.preventDefault();
+    clearInput() {
+      document.getElementById("imginput").value = "";
     },
-    //      create () {
-
-    // const post = {
-    //   photo: this.img1,
-    //   caption: this.caption
-    // }
-    // firebase.database().ref('PhotoGallery').push(post)
-    // .then((response) => {
-    //   console.log(response)
-    // })
-    // .catch(err => {
-    //   console.log(err)
-    // })
-    //     },
-    //   click1() {
-    //   this.$refs.input1.click()
-    // },
     previewImage(e) {
       this.uploadValue = 0;
       console.log(e.target.files[0]);
@@ -173,6 +130,7 @@ export default {
       let fileSize = file.size / 1024 / 1024;
       if (fileSize > 2) {
         e.preventDefault();
+        this.clearInput();
         alert("File is over 2mb");
       } else {
         this.url = URL.createObjectURL(file);
@@ -206,7 +164,6 @@ export default {
         }
       );
     },
-    ...mapActions("topics", ["submitNewTopic"]),
     async handleSubmitNewTopic() {
       if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
@@ -216,15 +173,24 @@ export default {
           }, 2000);
         });
       } else {
-        this.topic_thumbFile = "placeHolderImg.png";
-        this.topic_thumbURL =
-          "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
-
         setTimeout(async () => {
           await this.submitNewTopic();
         }, 2000);
       }
     },
+    resetFields() {
+      this.title = "";
+      this.timePeriod = [];
+      this.url = null;
+      this.imageData = null;
+      this.clearInput();
+      this.clearFields();
+      this.clearTopicId();
+    },
+  },
+  created() {
+    this.clearFields();
+    this.clearTopicId();
   },
 };
 </script>

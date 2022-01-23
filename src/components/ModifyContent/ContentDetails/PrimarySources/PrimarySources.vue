@@ -3,12 +3,11 @@
     <v-container fluid>
       <navbar />
       <!-- ADDING CONTENT -->
-      <v-row class="mx-3">
+      <v-row class="mx-4">
         <!-- SOURCE CONTENT -->
-        <v-col lg="6" md="6" cols="12" class="pr-4">
+        <v-col lg="6" md="6" sm="12" xs="12">
           <v-text-field
             label="Artifact:"
-            background-color="grey lighten-2"
             v-model="title"
             outlined
             dense
@@ -18,54 +17,65 @@
             outlined
             name="input-7-4"
             label="Caption:"
-            background-color="grey lighten-2"
-            height="7vw"
           ></v-textarea>
         </v-col>
 
-        <v-col>
-          <!-- IMG PREVIEW -->
-          <div class="d-flex">
-            <v-card
-              class="d-block"
-              height="80px"
-              width="10vw"
-              color="grey lighten-2"
-            >
-              <v-img v-if="url" :src="url" height="80px" width="10vw"></v-img>
-            </v-card>
-            <div style="width: 17vw">
-              <form id="form">
-                <input
-                  class="pl-4"
-                  ref="input1"
-                  type="file"
-                  @change="previewImage"
-                />
-              </form>
-            </div>
-          </div>
-          <!-- BUTTONS -->
-          <div class="d-flex flex-row justify-end pt-8">
-            <v-btn
-              class="white--text"
-              width="180"
-              color="#3891A6"
-              :disabled="!checkfield"
-              elevation="2"
-              @click="clearWorkFields"
-              >Reset</v-btn
-            >
-
-            <v-btn
-              class="white--text ml-3"
-              width="180"
-              color="#3891A6"
-              elevation="2"
-              @click="handleSaveWork"
-              >+ Add Primary Source</v-btn
-            >
-          </div>
+        <v-col lg="6" md="6" sm="12" xs="12">
+          <v-row>
+            <v-col>
+              <!-- IMG PREVIEW -->
+              <div class="d-flex">
+                <v-card
+                  class="d-block"
+                  height="80px"
+                  width="10vw"
+                  color="grey lighten-2"
+                >
+                  <v-img
+                    v-if="url"
+                    :src="url"
+                    height="80px"
+                    width="10vw"
+                  ></v-img>
+                </v-card>
+                <div style="width: 17vw">
+                  <form id="form">
+                    <input
+                      class="pl-4"
+                      ref="input1"
+                      type="file"
+                      @change="previewImage"
+                    />
+                  </form>
+                </div>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row class="pt-14">
+            <v-col class="d-flex justify-end pr-0">
+              <v-btn
+                class="white--text"
+                width="180"
+                color="#3891A6"
+                :disabled="!checkfield"
+                elevation="2"
+                @click="clearWorkFields"
+              >
+                Reset
+              </v-btn>
+            </v-col>
+            <v-col lg="5" md="5" sm="5" xs="12" class="d-flex justify-end">
+              <v-btn
+                class="white--text "
+                width="180"
+                color="#3891A6"
+                elevation="2"
+                @click="handleSaveWork"
+              >
+                + Add Primary Source
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
       <!-- DROP DOWN -->

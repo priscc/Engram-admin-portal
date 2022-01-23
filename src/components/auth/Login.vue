@@ -197,7 +197,7 @@ export default {
           (UserCredential) => {
             console.log(UserCredential);
             alert(`Account created for ${this.email}`);
-            this.$router.push("/addcontent");
+            this.$router.push("/topiclist");
           },
           (err) => {
             alert(err.message);
@@ -218,7 +218,7 @@ export default {
             console.log(UserCredential);
             console.log(UserCredential.user);
             alert(`You are logged in as ${this.loginEmail}`);
-            this.$router.push("/addcontent");
+            this.$router.push("/topiclist");
           },
           (err) => {
             alert(err.message);

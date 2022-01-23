@@ -1,52 +1,82 @@
 <template>
   <v-app>
-    <!-- <div id="app"> -->
-    <v-card class="overflow-hidden">
-      <v-app-bar
-        absolute
-        color="white"
-        elevate-on-scroll
-        scroll-target="#scrolling-techniques-7"
-        src="https://picsum.photos/1920/1080?random"
-      >
-        <template v-slot:img="{ props }">
-          <v-img
-            v-bind="props"
-            gradient="to top right,#607D8B, rgba(25,32,72,.7)"
-          ></v-img>
-        </template>
+    <v-navigation-drawer permanent app>
+      <v-list-item two-line>
+        <v-list-item-avatar color="#3891A6" size="56">
+          <v-img v-if="photoURL" :src="photoURL"></v-img>
+          <!-- <v-list-item-title
+            light
+            class="text-h6 white--text text-uppercase font-weight-black"
+            v-else
+          >
+            {{ email.charAt(0) }}
+          </v-list-item-title> -->
+          <v-icon v-else dark>mdi-account-circle</v-icon>
+        </v-list-item-avatar>
 
-        <v-toolbar-title>
-          <v-btn text x-large
-            ><router-link
-              class="white--text font-weight-black"
-              :class="[
-                currentPage.includes('content') ? activeClass : '',
-                'nav-item',
+        <v-list-item-content>
+          <v-list-item-title class="subtitle-1 blue-grey--text text--darken-2">
+            {{ name }}
+          </v-list-item-title>
+
+          <v-list-item-subtitle
+            class="subtitle-2 blue-grey--text text--darken-2"
+            >{{ email }}</v-list-item-subtitle
+          >
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list flat dense>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+          :to="item.path"
+        >
+          <v-list-item-icon class="ma-auto mr-2">
+            <v-icon
+              :style="[
+                item.path === $route.path
+                  ? { color: '#3891A6' }
+                  : { color: '#455A64' },
               ]"
-              to="/addcontent"
-              exact
-              >Study Bites Admin Portal
-            </router-link>
+              >{{ item.icon }}</v-icon
+            >
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title
+              class="subtitle-1"
+              :style="[
+                item.path === $route.path
+                  ? { color: '#3891A6' }
+                  : { color: '#455A64' },
+              ]"
+              >{{ item.title }}</v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block text outlined color="blue-grey darken-2" @click="logout">
+            Logout <v-icon small>mdi-logout</v-icon>
           </v-btn>
-        </v-toolbar-title>
+        </div>
+      </template>
+    </v-navigation-drawer>
 
-        <v-spacer></v-spacer>
-
-        <v-btn icon color="white" @click="logout">
-          <v-icon>mdi-logout</v-icon>
-        </v-btn>
-      </v-app-bar>
-      <v-sheet
-        id="scrolling-techniques-7"
-        class="overflow-y-auto"
-        max-height="800"
-      >
-        <v-container style="padding-top: 100px; padding-bottom: 100px"
-          ><router-view />
-        </v-container>
-      </v-sheet>
-    </v-card>
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+      <!-- Provides the application the proper gutter -->
+      <v-container style="background-color: #FAFAFA">
+        <!-- If using vue-router -->
+        <router-view></router-view>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
@@ -56,7 +86,31 @@ import firebase from "firebase";
 export default {
   data() {
     return {
-      activeClass: "active",
+      name: "",
+      email: "",
+      photoURL: "",
+      items: [
+        {
+          title: "Home",
+          icon: "mdi-home",
+          path: "/home",
+        },
+        {
+          title: "Add New Topic",
+          icon: "mdi-folder-plus",
+          path: "/addtopicform",
+        },
+        {
+          title: "Topic Intro",
+          icon: "mdi-clipboard-check",
+          path: "/topiclist",
+        },
+        {
+          title: "Topic Content",
+          icon: "mdi-format-list-bulleted",
+          path: "/modifycontent",
+        },
+      ],
     };
   },
   computed: {
@@ -75,32 +129,20 @@ export default {
         });
     },
   },
+  mounted() {
+    const user = firebase.auth().currentUser;
+
+    if (user !== null) {
+      user.providerData.forEach((profile) => {
+        this.name = profile.displayName;
+        this.email = profile.email;
+        this.photoURL = profile.photoURL;
+      });
+    }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
-#app {
-  font-family: "Abel";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  display: block;
-}
-
-#nav {
-  padding: 16px;
-  font-weight: bold;
-  color: #2c3e50;
-  display: flex;
-  justify-content: center;
-}
-#logout:hover {
-  cursor: pointer;
-}
-.active {
-  text-decoration: none;
-  color: #42b983;
-}
 </style>

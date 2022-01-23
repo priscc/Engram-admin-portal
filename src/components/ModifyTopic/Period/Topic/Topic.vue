@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mx-auto" flat rounded width="298px">
+    <v-card class="mx-auto" flat rounded max-height="200">
       <v-fab-transition>
         <v-btn
           fab

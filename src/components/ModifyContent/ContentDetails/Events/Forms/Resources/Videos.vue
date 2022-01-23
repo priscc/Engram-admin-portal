@@ -4,9 +4,9 @@
       <v-container>
         <div class="d-flex justify-start font-weight-bold">Video Resources</div>
         <v-row>
-          <v-col cols="6">
-            <div class="pt-4 d-flex justify-center align-center">
-              <v-card class="d-flex" width="319px" height="auto" outlined>
+          <v-col>
+            <div class="pt-4">
+              <v-card class="d-flex" width="100%" height="auto" outlined>
                 <div
                   class="d-flex flex-row"
                   style="position: absolute; right: 0px"
@@ -78,7 +78,9 @@
               </v-card>
             </div>
           </v-col>
-          <v-col cols="6">
+        </v-row>
+        <v-row>
+          <v-col>
             <div v-for="video in currentVideos" :key="video.id">
               <Video v-bind:video="video" />
             </div>
@@ -101,13 +103,6 @@ export default {
     return {
       valid: true,
       parentType: "event",
-      videos: [
-        { description: "Lorem Ipsum" },
-        { description: "Lorem Ipsum" },
-        { description: "Lorem Ipsum" },
-      ],
-      name: null,
-      link: null,
     };
   },
   computed: {
@@ -129,15 +124,6 @@ export default {
     },
   },
   methods: {
-    ready(event) {
-      this.player = event.target;
-    },
-    stop() {
-      this.player.stopVideo();
-    },
-    pause() {
-      this.player.pauseVideo();
-    },
     ...mapActions("videos", [
       "fetchContentVideos",
       "submitNewVideo",
@@ -145,12 +131,9 @@ export default {
     ]),
     validate() {
       this.$refs.form.validate();
-      console.log("Submitted");
-      alert("Submitted");
     },
     async submitNewVideoHandler(parentType) {
       await this.submitNewVideo(parentType);
-      await this.fetchContentVideos(parentType);
     },
   },
   created() {

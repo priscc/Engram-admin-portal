@@ -2,8 +2,9 @@ import Vue from "vue";
 // import VueRouter from 'vue-router'
 import Router from "vue-router";
 import firebase from "firebase";
-// import Home from '../views/Home.vue'
-import AddContent from "@/components/AddContent.vue";
+import Home from "../views/Home.vue";
+// import AddContent from "@/components/AddContent.vue";
+// import AddContent from "@/components/AddContent.vue";
 import AddTopicForm from "@/components/AddTopic/AddTopicForm.vue";
 // import ModifyTopic from '@/components/ModifyTopic/ModifyTopic.vue'
 import TopicList from "@/components/ModifyTopic/TopicList.vue";
@@ -43,16 +44,24 @@ let router = new Router({
         requiresGuest: true,
       },
     },
+    // {
+    //   path: "/addcontent",
+    //   name: "Add Content",
+    //   component: AddContent,
+    //   meta: {
+    //     requiresAuth: true,
+    //   },
+    // },
     {
-      path: "/addcontent",
-      name: "Add Content",
-      component: AddContent,
+      path: "/home",
+      name: "Home",
+      component: Home,
       meta: {
         requiresAuth: true,
       },
     },
     {
-      path: "/addcontent/addtopicform",
+      path: "/addtopicform",
       name: "AddTopicForm",
       component: AddTopicForm,
       meta: {
@@ -60,7 +69,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/topiclist",
+      path: "/topiclist",
       name: "TopicList",
       component: TopicList,
       meta: {
@@ -68,7 +77,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/topiclist/general",
+      path: "/topiclist/general",
       name: "General",
       component: General,
       props: true,
@@ -77,7 +86,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/topiclist/text",
+      path: "/topiclist/text",
       name: "Text",
       component: Text,
       props: true,
@@ -86,7 +95,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/topiclist/resources",
+      path: "/topiclist/resources",
       name: "Resources",
       component: Resources,
       props: true,
@@ -95,7 +104,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent",
+      path: "/modifycontent",
       name: "ModifyContent",
       component: ModifyContent,
       meta: {
@@ -103,7 +112,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/events",
+      path: "/modifycontent/events",
       name: "Events",
       component: Events,
       meta: {
@@ -111,7 +120,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/events/general",
+      path: "/modifycontent/events/general",
       name: "EventGeneral",
       component: EventGeneral,
       meta: {
@@ -119,7 +128,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/events/map",
+      path: "/modifycontent/events/map",
       name: "EventMap",
       component: EventMap,
       meta: {
@@ -127,7 +136,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/events/text",
+      path: "/modifycontent/events/text",
       name: "EventText",
       component: EventText,
       meta: {
@@ -135,7 +144,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/events/resources",
+      path: "/modifycontent/events/resources",
       name: "EventResources",
       component: EventResources,
       meta: {
@@ -143,7 +152,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/historicalpeople",
+      path: "/modifycontent/historicalpeople",
       name: "HistoricalPeople",
       component: HistoricalPeople,
       meta: {
@@ -151,7 +160,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/historicalpeople/general",
+      path: "/modifycontent/historicalpeople/general",
       name: "HistPeopleGeneral",
       component: HistPeopleGeneral,
       meta: {
@@ -159,7 +168,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/historicalpeople/text",
+      path: "/modifycontent/historicalpeople/text",
       name: "HistPeopleText",
       component: HistPeopleText,
       meta: {
@@ -167,7 +176,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/historicalpeople/resources",
+      path: "/modifycontent/historicalpeople/resources",
       name: "HistPeopleResources",
       component: HistPeopleResources,
       meta: {
@@ -175,7 +184,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/terminology",
+      path: "/modifycontent/terminology",
       name: "Terminology",
       component: Terminology,
       meta: {
@@ -183,7 +192,7 @@ let router = new Router({
       },
     },
     {
-      path: "/addcontent/modifycontent/primarysources",
+      path: "/modifycontent/primarysources",
       name: "PrimarySources",
       component: PrimarySources,
       meta: {
@@ -214,7 +223,7 @@ router.beforeEach((to, from, next) => {
     if (firebase.auth().currentUser) {
       // Go to login
       next({
-        path: "/addcontent",
+        path: "/topiclist",
         query: {
           redirect: to.fullPath,
         },

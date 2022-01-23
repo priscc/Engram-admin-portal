@@ -1,46 +1,37 @@
 <template>
-  <div class="d-flex pt-4 justify-center align-center">
+  <div class="pt-4" id="TopicVideo">
     <v-card
       class="d-flex"
-      width="25vw"
-      height="72px"
+      width="319px"
+      height="auto"
       outlined
       style="border: 1px solid #979797"
     >
-      <v-card
-        width="111px"
-        height="72px"
-        outlined
-        style="border: 1px solid #979797;margin: -1px 0px 0px -1px"
-        color="#D8D8D8"
-      >
+      <v-card width="auto" height="auto" outlined class="d-flex align-center">
         <youtube
+          class="pa-1 d-flex align-center"
           :video-id="video.url"
           :player-width="111"
           :player-height="72"
         ></youtube>
-        <div v-if="showDiv" style="padding: 8px; text-align: left">
-          Preview of current video:
-        </div>
       </v-card>
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
-        <div id="cardbtn1">
+        <div>
           <!-- Modal when editing a video -->
           <v-dialog v-model="editDialog" persistent max-width="500">
             <template v-slot:activator="{ on, attrs }">
-              <span class="material-icons">
-                <v-icon
-                  class="d-flex"
-                  size="20"
-                  color="#3891A6"
-                  style="cursor: pointer"
-                  @click="editVideo(video)"
-                  v-bind="attrs"
-                  v-on="on"
-                >
+              <v-btn
+                color="#3891A6"
+                @click="editVideo(video)"
+                v-bind="attrs"
+                v-on="on"
+                icon
+                x-small
+              >
+                <v-icon>
                   create
                 </v-icon>
-              </span>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title class="headline d-flex justify-center">
@@ -49,25 +40,15 @@
                 </div>
               </v-card-title>
               <div class="d-flex justify-center">
-                <v-card
-                  class=" d-flex"
-                  width="111px"
-                  height="80px"
-                  outlined
-                  style="border: 1px solid #979797"
-                  color="#D8D8D8"
-                >
+                <v-card width="111px" height="80px" outlined color="#D8D8D8">
                   <youtube
                     v-if="showYoutube"
                     :video-id="currentVideoURL"
                     :player-width="111"
                     :player-height="78"
                   ></youtube>
-                  <div v-if="showDiv" style="padding: 8px; text-align: left">
-                    Preview of current video:
-                  </div>
                 </v-card>
-                <div class=" d-flex pl-8">
+                <div class="pl-8">
                   <v-form ref="form" lazy-validation>
                     <v-text-field
                       class="mt-5"
@@ -99,8 +80,6 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- Modal  -->
-
           <!-- Modal when deleting a video -->
           <v-dialog v-model="delDialog" persistent max-width="250">
             <template v-slot:activator="{ on, attrs }">
@@ -142,10 +121,9 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- Modal  -->
         </div>
       </div>
-      <div class="font-weight-regular d-flex align-center ml-8">
+      <div class="pl-2 pr-1 pt-6 text-left">
         {{ video.title }}
       </div>
     </v-card>
@@ -155,7 +133,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
-
 export default {
   data() {
     return {

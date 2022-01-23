@@ -90,7 +90,6 @@ export default {
       this.deleteEvent(event);
       this.dialog = false;
       console.log("Deleted " + event.title);
-      console.log(event);
     },
     editEventHandler(event) {
       this.editEvent(event);

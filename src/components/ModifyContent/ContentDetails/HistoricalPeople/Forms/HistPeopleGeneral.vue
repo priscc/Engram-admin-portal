@@ -1,156 +1,112 @@
 <template>
-  <v-form>
-    <v-card class="mx-auto mt-4" width="62vw" height="28vw">
-      <v-card class="mx-auto" width="62vw" height="5vw" color="#273238">
-        <div class="d-flex">
-          <v-container class="pt-8 pl-12 d-flex">
-            <div id="nav">
-              <router-link
-                class="col"
-                to="/addcontent/modifycontent/historicalpeople/general"
-                exact
-                >General</router-link
+  <div id="PeopleInfo">
+    <v-form>
+      <v-card class="mx-auto mt-4 pb-6" width="62vw" height="auto">
+        <navbar />
+        <v-container class="px-10">
+          <v-row>
+            <v-col class="d-flex flex-row">
+              <v-card
+                class="d-block"
+                height="120px"
+                width="180px"
+                color="grey lighten-2"
               >
-              <router-link
-                class="col"
-                :event="routeValidation ? 'click' : ''"
-                to="/addcontent/modifycontent/historicalpeople/text"
-                exact
-                >Text</router-link
-              >
-              <router-link
-                class="col"
-                :event="routeValidation ? 'click' : ''"
-                to="/addcontent/modifycontent/historicalpeople/resources"
-                exact
-                >Resources</router-link
-              >
-            </div>
-          </v-container>
-          <div class="d-flex justify-end">
-            <span class="material-icons">
-              <v-icon
-                size="40"
+                <v-img v-if="url" :src="url" height="100%"></v-img>
+              </v-card>
+              <div class="d-flex align-end">
+                <input
+                  class="pl-4"
+                  ref="input1"
+                  type="file"
+                  @change="previewImage"
+                />
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="name"
+                label="Name"
+                outlined
+                dense
+                required
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div>
+                <v-text-field
+                  v-model="dateOfBirth"
+                  label="Date of Birth"
+                  outlined
+                  dense
+                ></v-text-field>
+                <div class="d-flex align-center mt-n10">
+                  <div class="d-flex" style="width: 30px">{{ eraBirth }}</div>
+                  <v-switch
+                    v-model="birthEra"
+                    color="#3891A6"
+                    inset
+                    @click="switchToggle($event, 'birth')"
+                  ></v-switch>
+                </div>
+              </div>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col>
+              <div>
+                <v-text-field
+                  v-model="dateOfPassing"
+                  label="Date of Passing"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+              <div class="d-flex align-center mt-n10 pr-12">
+                <div class="d-flex" style="width: 30px">{{ eraPassing }}</div>
+                <v-switch
+                  v-model="passingEra"
+                  color="#3891A6"
+                  inset
+                  @click="switchToggle($event, 'passing')"
+                ></v-switch>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="pt-10">
+              <v-btn
+                class="white--text"
+                width="140"
                 color="#3891A6"
-                @click="
-                  $router.push({
-                    name: 'HistoricalPeople',
-                    path: '/historicalpeople',
-                  })
-                "
-              >
-                disabled_by_default
-              </v-icon>
-            </span>
-          </div>
-        </div>
+                elevation="2"
+                block
+                :disabled="!checkfield"
+                @click="savePersonHandler"
+                >Save Historical Figure
+                <v-icon small class="pl-2">mdi-plus-circle-outline</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card>
-      <v-col class="pl-12 pt-9" cols="10" sm="9" md="11">
-        <v-text-field
-          v-model="name"
-          label="Title"
-          background-color="grey lighten-2"
-          outlined
-          dense
-          required
-        ></v-text-field>
-      </v-col>
-      <div class="d-flex">
-        <v-col class="pl-12 mt-n4" cols="4">
-          <v-text-field
-            v-model="dateOfBirth"
-            label="Date of Birth"
-            background-color="grey lighten-2"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <div class="d-flex align-center mt-n10 pr-12">
-          <div class="d-flex" style="width: 30px">{{ eraBirth }}</div>
-          <v-switch
-            v-model="birthEra"
-            color="#3891A6"
-            inset
-            @click="switchToggle($event, 'birth')"
-          ></v-switch>
-        </div>
-        <v-col class="mt-n4" cols="4">
-          <v-text-field
-            v-model="dateOfPassing"
-            label="Date of Passing"
-            background-color="grey lighten-2"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <div class="d-flex align-center mt-n10 pr-12">
-          <div class="d-flex" style="width: 30px">{{ eraPassing }}</div>
-          <v-switch
-            v-model="passingEra"
-            color="#3891A6"
-            inset
-            @click="switchToggle($event, 'passing')"
-          ></v-switch>
-        </div>
-      </div>
-      <div class="d-flex pl-12 mt-n4">
-        <v-card
-          class="d-block"
-          height="80px"
-          width="10vw"
-          color="grey lighten-2"
-        >
-          <v-img v-if="url" :src="url" height="80px" width="10vw"></v-img>
-        </v-card>
-
-        <div style="width: 17vw">
-          <!-- <v-file-input
-            class="pt-10"
-            @change="Preview_image"
-            v-model="image"
-            accept="image/*"
-            prepend-icon="none"
-            append-icon="attach_file"
-            placeholder="Upload TOPIC thumbnail"
-          >
-          </v-file-input> -->
-          <input class="pl-4" ref="input1" type="file" @change="previewImage" />
-        </div>
-      </div>
-
-      <div class="d-flex justify-end pr-12">
-        <v-btn
-          class="white--text"
-          width="140"
-          color="#3891A6"
-          elevation="2"
-          :disabled="!checkfield"
-          @click="savePersonHandler"
-          >Save</v-btn
-        >
-      </div>
-    </v-card>
-  </v-form>
+    </v-form>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
+import navbar from "./HistPeopleCardHeader.vue";
 
 export default {
+  components: { navbar },
   data: () => ({
     image: null,
-    eventTheme: [
-      "Society",
-      "Politics",
-      "Environment",
-      "Culture",
-      "Economics",
-      "Technology",
-      "Independent",
-    ],
-    selectedPeriod: null,
     disabled: 1,
     url: null,
     imageData: null,
@@ -158,13 +114,6 @@ export default {
     eraPassing: "AD",
   }),
   computed: {
-    selectsPeriod() {
-      return this.selectedPeriod.length > 0;
-    },
-    icon() {
-      if (this.selectsPeriod) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    },
     checkfield() {
       return this.currentPerson.name;
     },
@@ -193,36 +142,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions("people", ["handleSave"]),
     mountPreview() {
       this.url = this.thumbURL;
     },
-    previewImage(e) {
-      this.uploadValue = 0;
-      console.log(e.target.files[0]);
-      let file = e.target.files[0];
-      let fileSize = file.size / 1024 / 1024;
-      if (fileSize > 2) {
-        e.preventDefault();
-        alert("File is over 2mb");
-      } else {
-        this.url = URL.createObjectURL(file);
-        this.imageData = e.target.files[0];
-        this.thumbFile = file.name;
-      }
-    },
-    // Preview_image() {
-    //   this.url = URL.createObjectURL(this.image);
-    // },
     toggle() {
       this.$nextTick(() => {
         this.selectedPeriod = this.timePeriod.slice();
       });
-    },
-    resetbtn(e) {
-      if (this.checkfield) {
-        this.disabled = 0;
-      }
-      e.preventDefault();
     },
     switchToggle(e, date) {
       console.log(this.birthEra);
@@ -242,6 +169,19 @@ export default {
       }
       e.preventDefault();
     },
+    previewImage(e) {
+      this.uploadValue = 0;
+      let file = e.target.files[0];
+      let fileSize = file.size / 1024 / 1024;
+      if (fileSize > 2) {
+        e.preventDefault();
+        alert("File is over 2mb");
+      } else {
+        this.url = URL.createObjectURL(file);
+        this.imageData = e.target.files[0];
+        this.thumbFile = file.name;
+      }
+    },
     onUpload() {
       const storageRef = firebase
         .storage()
@@ -254,20 +194,17 @@ export default {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
-          console.log(error.message);
+          console.log("image upload error", error.message);
         },
         () => {
           this.uploadValue = 100;
           storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            // this.img1 = url;
-            // console.log(this.img1);
             this.thumbURL = url;
             console.log(this.thumbURL);
           });
         }
       );
     },
-    ...mapActions("people", ["handleSave"]),
     async savePersonHandler() {
       if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
@@ -277,17 +214,10 @@ export default {
           }, 2000);
         });
       } else {
-        this.thumbFile = "placeHolderImg.png";
-        this.thumbURL =
-          "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
         setTimeout(async () => {
           await this.handleSave();
         }, 2000);
       }
-      // this.$router.replace({
-      //   name: "HistoricalPeople",
-      //   path: "/addcontent/modifycontent/historicalpeople",
-      // });
     },
   },
   created() {

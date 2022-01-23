@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-4">
+  <div class="pt-4" id="EventVideo">
     <v-card
       class="d-flex"
       width="319px"
@@ -114,7 +114,6 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- Modal  -->
         </div>
       </div>
       <div class="pl-2 pr-1 pt-6 text-left">

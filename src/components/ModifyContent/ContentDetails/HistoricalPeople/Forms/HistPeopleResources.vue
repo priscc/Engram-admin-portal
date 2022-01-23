@@ -1,72 +1,27 @@
 <template>
-  <v-card class="mx-auto mt-4" width="62vw" height="40vw">
-    <v-card class="mx-auto" width="62vw" height="5vw" color="#273238">
-      <div class="d-flex">
-        <v-container class="pt-8 pl-12 d-flex">
-          <div id="nav">
-            <router-link
-              class="col"
-              to="/addcontent/modifycontent/historicalpeople/general"
-              exact
-              >General</router-link
-            >
-            <router-link
-              class="col"
-              to="/addcontent/modifycontent/historicalpeople/text"
-              exact
-              >Text</router-link
-            >
-            <router-link
-              class="col"
-              to="/addcontent/modifycontent/historicalpeople/resources"
-              exact
-              >Resources</router-link
-            >
-          </div>
-        </v-container>
-        <div class="d-flex justify-end">
-          <span class="material-icons">
-            <v-icon
-              size="40"
-              color="#3891A6"
-              @click="
-                $router.push({
-                  name: 'HistoricalPeople',
-                  path: '/historicalpeople',
-                })
-              "
-            >
-              disabled_by_default
-            </v-icon>
-          </span>
-        </div>
-      </div>
+  <div id="PeopleResources">
+    <v-card class="mx-auto pb-6" width="62vw" height="auto">
+      <navbar />
+      <v-container>
+        <v-row>
+          <v-col lg="6" md="6" sm="12">
+            <videos />
+          </v-col>
+          <v-col lg="6" md="6" sm="12">
+            <articles />
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
-    <div class="d-flex flex-row">
-      <Videos />
-      <Articles />
-    </div>
-
-    <div class="d-flex justify-end pr-12 pt-4">
-      <v-btn
-        class="white--text"
-        width="140"
-        color="#3891A6"
-        elevation="2"
-        @click="
-          $router.push({ name: 'HistoricalPeople', path: '/historicalpeople' })
-        "
-        >Save</v-btn
-      >
-    </div>
-  </v-card>
+  </div>
 </template>
 
 <script>
-import Videos from "./Resources/Videos.vue";
-import Articles from "./Resources/Articles";
+import videos from "./Resources/Videos.vue";
+import articles from "./Resources/Articles";
+import navbar from "./HistPeopleCardHeader.vue";
 export default {
-  components: { Videos, Articles },
+  components: { videos, articles, navbar },
 };
 </script>
 

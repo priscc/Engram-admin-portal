@@ -23,6 +23,7 @@
           </p>
           <div>
             <v-select
+              disabled
               v-model="selectedPeriod"
               :items="timePeriod"
               :menu-props="{ top: false, offsetY: false }"
@@ -70,13 +71,9 @@ export default {
       "bindEvents",
     ]),
     ...mapActions("topics", ["bindTopics"]),
-    test() {
-      console.log(this.currentTopicEvents);
-    },
   },
   created() {
     this.clearEventId();
-    this.test();
     this.fetchEventsList();
   },
 };

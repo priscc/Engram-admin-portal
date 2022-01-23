@@ -55,15 +55,17 @@ export default {
           });
           await commit("SET_ARTICLES", articleList);
         });
-      console.log(state.articles);
+      console.log("fetchArticles", state.articles);
     },
 
     //* fetches all article resources for an event
     async fetchContentArticles({ state, commit, rootState }, parentType) {
       const readParentID = (parentType) => {
         if (parentType == "event") {
+          console.log("1) eventID (video):", rootState.events.eventId);
           return rootState.events.eventId;
         } else if (parentType == "people") {
+          console.log("1) personId (person):", rootState.events.personId);
           return rootState.people.personId;
         }
       };
@@ -76,6 +78,7 @@ export default {
         .get()
         .then((querySnapshot) => {
           querySnapshot.docs.map((doc) => {
+            console.log("2) fetching articles eventID:", parentID);
             let articleItem = doc.data();
             articles.push({
               ...articleItem,
@@ -84,12 +87,11 @@ export default {
           });
         });
       await commit("SET_ARTICLES", articles);
-      console.log(state.contentArticles);
+      console.log("3) fetched articles:", state.articles);
     },
 
     //* submit new article resource
-    async submitNewArticle({ state, rootState, commit, dispatch }, parentType) {
-      //* sets parentID
+    async submitNewArticle({ state, commit, rootState, dispatch }, parentType) {
       const readParentID = (parentType) => {
         if (parentType == "event") {
           return rootState.events.eventId;
@@ -100,21 +102,41 @@ export default {
         }
       };
       let parentID = await readParentID(parentType);
+
       commit("SET_ARTICLE_PROPS", {
         parentID: parentID,
         parentType: parentType,
       });
       commit("SET_ARTICLE_TOPIC_ID", rootState.topics.topicID);
       commit("SET_SEARCH_ARRAY", state.currentArticle.title);
+      if (parentID) {
+        console.log("4) has parentID");
 
-      console.log(state.currentArticle);
-      console.log(parentID);
+        //* adds new article to firestore
+        await resourcesRef.add(state.currentArticle).then(() => {
+          console.log("Submitted Article Resource");
+        });
+      } else {
+        console.log("4) does not have parentID");
+      }
 
-      //* adds new article to firestore
-      await resourcesRef.add(state.currentArticle).then(() => {
-        console.log("Submitted Article Resource");
-      });
+      commit("UPDATE_ARTICLES");
+      console.log("4) new article:", state.currentArticle);
+      console.log("5) articles", state.articles);
+
       dispatch("clearArticleForm");
+    },
+
+    async addArticleToDB({ state }) {
+      if (state.articles.length > 0) {
+        var batch = db.batch();
+        state.articles.forEach((doc) => {
+          var docRef = resourcesRef.doc(); //automatically generate unique id
+          batch.set(docRef, doc);
+        });
+        batch.commit();
+        console.log("9) Submitted Articles:", state.articles);
+      }
     },
 
     //* sets current article for edit
@@ -136,7 +158,7 @@ export default {
         .doc(state.articleID)
         .set(state.currentArticle, { merge: true })
         .then(() => {
-          console.log("Submit Edit for " + state.currentArticle.title);
+          console.log("Submit Edit for" + state.currentArticle.title);
         });
     },
 
@@ -193,6 +215,13 @@ export default {
     UPDATE_SEARCH_ARRAY: (state, array) => {
       let newArray = array.split(" ");
       state.currentArticle.searchArray = newArray;
+    },
+    UPDATE_ARTICLES: (state) => state.articles.push(state.currentArticle),
+    UPDATE_ARTICLES_ID: (state, id) => {
+      state.articles.forEach(function(article) {
+        article.parentID = id;
+      });
+      console.log("8) update articles with eventids:", state.articles);
     },
   },
 };

@@ -1,22 +1,18 @@
 <template>
-  <v-container class="d-flex flex-column">
-
-
-    <AddContent />
-
-
-  </v-container>
-
+	<v-container style="min-height: 100vh; min-width: 100vw;">
+		<Header
+			v-bind:header="'Hello!'"
+			v-bind:description="'This page is not set up yet'"
+		/>
+	</v-container>
 </template>
 
 <script>
-import AddContent from '@/components/AddContent.vue'
+import Header from "@/components/DashboardHeaders.vue";
 
 export default {
-  name: 'Home',
-  
-  components: {
-    AddContent
-  }
-}
+	components: { Header },
+};
 </script>
+
+<style lang="scss" scoped></style>

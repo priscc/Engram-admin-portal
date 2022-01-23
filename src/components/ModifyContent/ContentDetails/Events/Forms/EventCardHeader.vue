@@ -14,25 +14,22 @@
         </v-col>
       </v-row>
       <v-row class="mt-0">
-        <v-col class="d-flex justify-start" v-if="this.currentEventId">
-          <router-link to="/addcontent/modifycontent/events/general" exact
+        <v-col class="d-flex justify-start">
+          <!-- v-if="this.currentEventId" -->
+          <router-link to="/modifycontent/events/general" exact
             >General</router-link
           >
-          <router-link to="/addcontent/modifycontent/events/map" exact
-            >Map</router-link
-          >
-          <router-link to="/addcontent/modifycontent/events/text" exact
-            >Text</router-link
-          >
-          <router-link to="/addcontent/modifycontent/events/resources" exact
+          <router-link to="/modifycontent/events/map" exact>Map</router-link>
+          <router-link to="/modifycontent/events/text" exact>Text</router-link>
+          <router-link to="/modifycontent/events/resources" exact
             >Resources</router-link
           >
         </v-col>
-        <v-col class="pt-0" v-else>
+        <!--  <v-col class="pt-0" v-else>
           <div class="d-flex justify-start white--text text-h6">
             Create a new event:
           </div>
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-container>
   </div>

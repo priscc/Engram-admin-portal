@@ -1,148 +1,104 @@
 <template>
   <v-form>
-    <v-card class="mx-auto mt-4" width="70vw" min-height="450px">
-      <v-card class="mx-auto" width="70vw" color="#273238">
-        <div class="d-flex">
-          <v-container class="pt-8 pl-12 d-flex">
-            <div id="nav">
-              <router-link class="col" to="/addcontent/topiclist/general" exact
-                >General</router-link
-              >
-              <router-link class="col" to="/addcontent/topiclist/text" exact
-                >Text</router-link
-              >
-              <router-link
-                class="col"
-                to="/addcontent/topiclist/resources"
-                exact
-                >Resources</router-link
-              >
+    <v-card class="mx-auto mt-4 pb-6" width="70vw" height="auto">
+      <navbar />
+
+      <v-container class="px-10">
+        <v-row>
+          <v-col class="d-flex align-center  justify-end">
+            <div class="d-flex" style="width:110px">
+              Topic: {{ topicToggle }}
             </div>
-          </v-container>
-          <div class="d-flex justify-end">
-            <span class="material-icons">
-              <v-icon
-                size="40"
-                color="#3891A6"
-                @click="$router.push({ name: 'TopicList', path: '/topiclist' })"
-              >
-                disabled_by_default
-              </v-icon>
-            </span>
-          </div>
-        </div>
-      </v-card>
-      <div class="d-flex align-center justify-end pr-12">
-        <div class="d-flex" style="width:110px">Topic: {{ topicToggle }}</div>
-        <v-switch v-model="switch1" inset @click="switchToggle"></v-switch>
-      </div>
-      <v-col class="pl-12 pt-2" cols="10" sm="9" md="11">
-        <v-text-field
-          v-model="title"
-          label="Title"
-          background-color="grey lighten-2"
-          outlined
-          dense
-          required
-        >
-        </v-text-field>
-      </v-col>
-      <div class="d-flex flex-row mt-n5">
-        <div class="d-flex pl-12">
-          <v-card
-            class="d-block"
-            width="9vw"
-            height="80px"
-            color="grey lighten-2"
-          >
-            <v-img
-              v-if="urlTopic"
-              :src="urlTopic"
+            <v-switch v-model="switch1" inset @click="switchToggle"></v-switch>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="d-flex flex-row">
+            <v-card
+              class="d-block"
+              width="9vw"
               height="80px"
-              max-width="9vw"
-            ></v-img>
-          </v-card>
-
-          <div style="width: 17vw">
-            <!-- <v-file-input
-              @change="Preview_image"
-              v-model="image"
-              accept="image/*"
-              prepend-icon="none"
-              append-icon="attach_file"
-              placeholder="Upload TOPIC thumbnail"
+              color="grey lighten-2"
             >
-            </v-file-input> -->
-            <label for="topic">Upload TOPIC thumbnail</label>
-            <input
-              name="topic"
-              class="pl-4"
-              type="file"
-              @change="previewImage($event, topicType)"
-            />
-          </div>
+              <v-img v-if="urlTopic" :src="urlTopic" height="100%"></v-img>
+            </v-card>
+
+            <div class="d-flex flex-column justify-end pl-4">
+              <label for="topic">Upload TOPIC thumbnail</label>
+              <input
+                name="topic"
+                type="file"
+                @change="previewImage($event, topicType)"
+              />
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field v-model="title" label="Title" outlined dense required>
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <div class=" d-flex justify-start font-weight-bold mt-6 mb-2">
+          Intro:
         </div>
-        <div class="d-flex pl-12">
-          <v-card
-            class="d-block"
-            width="9vw"
-            height="80px"
-            color="grey lighten-2"
-          >
-            <!-- <v-img
-              v-if="intro_thumbURL"
-              :src="intro_thumbURL"
+        <v-row class="ma-0">
+          <v-col cols="8">
+            <v-textarea
+              v-model="introMD"
+              outlined
+              name="input-7-4"
+              label="Main event content (has markdown):"
+            ></v-textarea>
+          </v-col>
+          <v-col cols="4">
+            <v-card
+              class="d-block"
+              width="9vw"
               height="80px"
-              max-width="9vw"
-            ></v-img> -->
-            <v-img :src="urlIntro" height="80px" max-width="9vw"></v-img>
-          </v-card>
-
-          <div style="width: 17vw">
-            <!-- <v-file-input
-              
-              @change="Preview_image"
-              v-model="url"
-              accept="image/*"
-              prepend-icon="none"
-              append-icon="attach_file"
-              placeholder="Upload MAP thumbnail"
+              color="grey lighten-2"
             >
-            </v-file-input> -->
-            <label for="map">Upload INTRO thumbnail</label>
-            <input
-              name="intro"
-              class="pl-4"
-              type="file"
-              @change="previewImage($event, introType)"
-            />
-          </div>
-        </div>
-      </div>
-      <v-col class="pl-12 pt-10" cols="10" sm="9" md="11">
-        <div class="d-flex flex-start" style="width: 24vw">
-          <v-select
-            v-model="timePeriod"
-            :items="timePeriodChoices"
-            :menu-props="{ top: true, offsetY: true }"
-            label="Time Period"
-            background-color="grey lighten-2"
-            outlined
-            dense
-          >
-          </v-select>
-        </div>
-      </v-col>
-      <div class="d-flex justify-end pr-12">
-        <v-btn
-          class="white--text"
-          width="140"
-          color="#3891A6"
-          elevation="2"
-          @click="handleSaveEdit"
-          >Save</v-btn
-        >
-      </div>
+              <v-img :src="urlIntro" height="100%"></v-img>
+            </v-card>
+
+            <div class="d-flex flex-column justify-end pt-4">
+              <label for="map">Upload INTRO thumbnail</label>
+              <input
+                name="intro"
+                type="file"
+                @change="previewImage($event, introType)"
+              />
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col lg="6" md="6" sm="12" xs="12" class="d-flex justify-start">
+            <v-select
+              v-model="timePeriod"
+              :items="timePeriodChoices"
+              :menu-props="{ top: true, offsetY: true }"
+              label="Time Period"
+              outlined
+              dense
+            >
+            </v-select>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="pt-10">
+            <v-btn
+              class="white--text"
+              width="140"
+              color="#3891A6"
+              elevation="2"
+              block
+              @click="handleSaveEdit"
+              >Save Topic
+              <v-icon small class="pl-2">mdi-plus-circle-outline</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
   </v-form>
 </template>
@@ -151,8 +107,10 @@
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
+import navbar from "./TopicIntroHeader.vue";
 
 export default {
+  components: { navbar },
   data: () => ({
     image: null,
     timePeriodChoices: [1, 2, 3, 4],
@@ -186,6 +144,7 @@ export default {
       "currentTopic.intro_thumbURL",
       "currentTopic.topic_thumbFile",
       "currentTopic.topic_thumbURL",
+      "currentTopic.introMD",
       // 'currentTopic.disabled',
       "currentTopic.timePeriod",
       "currentTopic.searchArray",
@@ -193,10 +152,6 @@ export default {
   },
   methods: {
     ...mapActions("topics", ["submitEditTopic"]),
-    //     blobToFile(blob, type) {
-    //       blob.type = type;
-    //       return blob;
-    //     },
     mountPreview() {
       this.urlIntro = this.intro_thumbURL;
       this.urlTopic = this.topic_thumbURL;
@@ -268,25 +223,39 @@ export default {
       });
     },
     async handleSaveEdit() {
-      if (this.intro_thumbURL === "") {
-        //   alert("Please provide images");
-        this.intro_thumbFile = "placeHolderImg.png";
-        this.intro_thumbURL =
-          "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
-        await this.onUpload();
-        setTimeout(async () => {
-          await this.submitEditTopic();
-        }, 2000);
-      } else if (this.topic_thumbURL === "") {
-        this.topic_thumbFile = "placeHolderImg.png";
-        this.topic_thumbURL =
-          "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
-        await this.onUpload();
-        setTimeout(async () => {
-          await this.submitEditTopic();
-        }, 2000);
-      } else if (this.topicImgData || this.introImgData) {
-        await this.onUpload();
+      console.log("save topic");
+      // if (this.intro_thumbURL === "") {
+      //   //   alert("Please provide images");
+      //   // this.intro_thumbFile = "placeHolderImg.png";
+      //   // this.intro_thumbURL =
+      //   //   "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
+      //   await this.onUpload();
+      //   setTimeout(async () => {
+      //     await this.submitEditTopic();
+      //   }, 2000);
+      // } else if (this.topic_thumbURL === "") {
+      //   // this.topic_thumbFile = "placeHolderImg.png";
+      //   // this.topic_thumbURL =
+      //   //   "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
+      //   await this.onUpload();
+      //   setTimeout(async () => {
+      //     await this.submitEditTopic();
+      //   }, 2000);
+      // } else if (this.topicImgData || this.introImgData) {
+      //   await this.onUpload();
+      //   setTimeout(async () => {
+      //     await this.submitEditTopic();
+      //   }, 2000);
+      // }
+
+      if (this.topicImgData || this.introImgData) {
+        let imgPromise = Promise.resolve(this.onUpload());
+        await imgPromise.then(async () => {
+          setTimeout(async () => {
+            await this.submitEditTopic();
+          }, 2000);
+        });
+      } else {
         setTimeout(async () => {
           await this.submitEditTopic();
         }, 2000);

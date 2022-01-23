@@ -1,56 +1,28 @@
 <template>
-  <v-card class="mx-auto mt-4 mb-12" width="70vw" min-height="570px">
-    <v-card class="mx-auto" width="70vw" color="#273238">
-      <div class="d-flex">
-        <v-container class="pt-8 pl-12 d-flex">
-          <div id="nav">
-            <router-link class="col" to="/addcontent/topiclist/general" exact
-              >General</router-link
-            >
-            <router-link class="col" to="/addcontent/topiclist/text" exact
-              >Text</router-link
-            >
-            <router-link class="col" to="/addcontent/topiclist/resources" exact
-              >Resources</router-link
-            >
-          </div>
-        </v-container>
-        <div class="d-flex justify-end">
-          <span class="material-icons">
-            <v-icon
-              size="40"
-              color="#3891A6"
-              @click="$router.push({ name: 'TopicList', path: '/topiclist' })"
-            >
-              disabled_by_default
-            </v-icon>
-          </span>
-        </div>
-      </div>
-    </v-card>
-    <div class="d-flex flex-row ">
-      <Videos />
-      <Articles />
-    </div>
+  <div id="TopicResources">
+    <v-card class="mx-auto mt-4 pb-6" width="70vw" height="auto">
+      <navbar />
 
-    <div class="d-flex justify-end pt-4 pr-12">
-      <v-btn
-        class="white--text"
-        width="140"
-        color="#3891A6"
-        elevation="2"
-        @click="$router.push({ name: 'TopicList', path: '/topiclist' })"
-        >Save</v-btn
-      >
-    </div>
-  </v-card>
+      <v-container class="px-10">
+        <v-row>
+          <v-col lg="6" md="6" sm="12">
+            <videos />
+          </v-col>
+          <v-col lg="6" md="6" sm="12">
+            <articles />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+  </div>
 </template>
 
 <script>
-import Videos from "./Resources/Videos.vue";
-import Articles from "./Resources/Articles";
+import videos from "./Resources/Videos.vue";
+import articles from "./Resources/Articles";
+import navbar from "./TopicIntroHeader.vue";
 export default {
-  components: { Videos, Articles },
+  components: { videos, articles, navbar },
 };
 </script>
 

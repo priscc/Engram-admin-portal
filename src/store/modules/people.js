@@ -1,6 +1,7 @@
 import { vuexfireMutations } from "vuexfire";
 import { getField, updateField } from "vuex-map-fields";
 import { db } from "../../firebase/db";
+import router from "../../router";
 
 const peopleRef = db.collection("people");
 
@@ -36,8 +37,14 @@ export default {
   },
 
   actions: {
+    //* sets the topic id for the current person
+    setPersonTopicId({ rootState, state, commit }) {
+      commit("SET_PERSON_TOPIC_ID", rootState.topics.topicID);
+      console.log("set event topicid", state.currentPerson.topicID);
+    },
+
     //* fetches the list of hist people under current topic
-    async fetchPeople({ rootState, commit, state }) {
+    async fetchPeople({ rootState, commit }) {
       let peopleList = [];
       await peopleRef
         .where("topicID", "array-contains-any", [rootState.topics.topicID])
@@ -54,13 +61,12 @@ export default {
           });
 
           commit("SET_TOPIC_PEOPLE", peopleList);
-          console.log(state.people);
-          console.log(rootState.topics.topicID);
         });
+      console.log("Topic Figures:", peopleList);
     },
 
     //* handler for add historical person
-    async setPersonForm({ commit, state }) {
+    async addPersonForm({ state, dispatch, commit }) {
       const fields = {
         name: "",
         mainMD: "",
@@ -79,7 +85,39 @@ export default {
       };
       // await dispatch('clearPersonId')
       await commit("SET_CURRENT_PERSON", fields);
-      console.log(state.personId);
+      await dispatch("clearPersonId");
+      router.push({
+        name: "HistPeopleGeneral",
+        path: "/historicalpeople/general",
+      });
+      console.log("Triggered adding person, personId:", state.personId);
+    },
+
+    //* handles submit new person data
+    async submitNewPerson({ state, dispatch, commit }) {
+      await dispatch("setPersonTopicId");
+      await commit("SET_SEARCH_ARRAY", state.currentPerson.name);
+      console.log("6) submitting new event", state.currentPerson);
+      await peopleRef.add(state.currentPerson).then(function(docRef) {
+        console.log("7) new Event id: ", docRef.id);
+        commit("articles/UPDATE_ARTICLES_ID", docRef.id, { root: true });
+        dispatch("articles/addArticleToDB", null, { root: true });
+        commit("videos/UPDATE_VIDEOS_ID", docRef.id, { root: true });
+        dispatch("videos/addVideoToDB", null, { root: true });
+      });
+      dispatch("closeForm", "HistoricalPeople", "/historicalpeople");
+    },
+
+    //* handles submit for edit person
+    async submitEditPerson({ state, dispatch, commit }) {
+      await commit("UPDATE_SEARCH_ARRAY", state.currentPerson.name);
+      await peopleRef
+        .doc(state.personId)
+        .set(state.currentPerson, { merge: true })
+        .then(() => {
+          console.log("Submit Edit for " + state.currentPerson.name);
+        });
+      dispatch("closeForm", "HistoricalPeople", "/historicalpeople");
     },
 
     //* clears the current person id
@@ -87,26 +125,16 @@ export default {
       await commit("CLEAR_PERSON_ID", null);
     },
 
-    //* handles submit new person data
-    async submitNewPerson({ dispatch, state, commit }) {
-      await dispatch("setPersonTopicId");
-      await commit("SET_SEARCH_ARRAY", state.currentPerson.name);
-      console.log("state", state.currentPerson);
-      await peopleRef.add(state.currentPerson).then(() => {
-        console.log("Person Added");
-      });
-    },
-
-    //* sets the topic id for the current person
-    setPersonTopicId({ rootState, state, commit }) {
-      commit("SET_PERSON_TOPIC_ID", rootState.topics.topicID);
-      console.log(state.currentPerson.topicID);
+    //* handles the close button of a form
+    async closeForm({ state, dispatch }, name, path) {
+      await dispatch("clearPersonId");
+      router.push({ name: name, path: path });
+      console.log("closed figure form - should be null", state.eventId);
     },
 
     //* sets current event for edit
-    async editPerson({ state, commit, dispatch }, person) {
+    async editPerson({ state, commit }, person) {
       await commit("SET_PERSON_ID", person.id);
-      console.log(state.personId);
 
       //* sets the index of the person for edit
       let index = state.people.findIndex((e) => e.id == person.id);
@@ -115,20 +143,8 @@ export default {
       let currentPerson = state.people[index];
 
       commit("SET_CURRENT_PERSON", currentPerson);
-      console.log(state.currentPerson);
 
-      await dispatch("fetchPersonResources");
-    },
-
-    //* handles submit for edit person
-    async submitEditPerson({ state, commit }) {
-      await commit("UPDATE_SEARCH_ARRAY", state.currentPerson.name);
-      await peopleRef
-        .doc(state.personId)
-        .set(state.currentPerson, { merge: true })
-        .then(() => {
-          console.log("Submit Edit for " + state.currentPerson.name);
-        });
+      // await dispatch("fetchPersonResources");
     },
 
     //* deletes person from the database

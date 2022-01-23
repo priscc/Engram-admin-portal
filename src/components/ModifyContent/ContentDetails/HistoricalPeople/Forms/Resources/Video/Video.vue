@@ -1,29 +1,22 @@
 <template>
-  <div class="d-flex pt-4 justify-center align-center">
+  <div class="pt-4">
     <v-card
       class="d-flex"
       width="319px"
-      height="72px"
+      height="auto"
       outlined
       style="border: 1px solid #979797"
     >
-      <v-card
-        width="111px"
-        height="72px"
-        outlined
-        style="border: 1px solid #979797;margin: -1px 0px 0px -1px"
-        color="#D8D8D8"
-        ><youtube
+      <v-card width="auto" height="auto" outlined class="d-flex align-center">
+        <youtube
+          class="pa-1 d-flex align-center"
           :video-id="video.url"
           :player-width="111"
           :player-height="72"
         ></youtube>
-        <div v-if="showDiv" style="padding: 8px; text-align: left">
-          Preview of current video:
-        </div></v-card
-      >
+      </v-card>
       <div class="d-flex flex-column" style="position: absolute; right: 0px">
-        <div id="cardbtn1">
+        <div>
           <!-- Modal when editing a video -->
           <v-dialog v-model="editDialog" persistent max-width="500">
             <template v-slot:activator="{ on, attrs }">
@@ -143,9 +136,7 @@
           <!-- Modal  -->
         </div>
       </div>
-      <div
-        class="font-weight-regular d-flex justify-center align-center mx-auto"
-      >
+      <div class="pl-2 pr-1 pt-6 text-left">
         {{ video.title }}
       </div>
     </v-card>

@@ -9,7 +9,6 @@ export default {
   namespaced: true,
   state: {
     videos: [],
-    articles: [],
     videoID: null,
     videoURL: null,
     contentID: null,
@@ -26,7 +25,6 @@ export default {
   getters: {
     getField,
     currentVideos: (state) => state.videos,
-    currentArticles: (state) => state.articles,
     currentVideoURL: (state) => getIdFromURL(state.videoURL),
   },
   actions: {
@@ -36,7 +34,7 @@ export default {
     }),
 
     //* fetches all videos under topics
-    async fetchVideos({ commit, state, rootState }, parentType) {
+    async fetchVideos({ commit, rootState }, parentType) {
       let videoList = [];
 
       await resourcesRef
@@ -56,15 +54,17 @@ export default {
           });
           await commit("SET_VIDEOS", videoList);
         });
-      console.log(state.videos);
+      // console.log("fetchVideos", state.videos);
     },
 
     //* fetches all video resources under topic contents
-    async fetchContentVideos({ commit, rootState }, parentType) {
+    async fetchContentVideos({ state, commit, rootState }, parentType) {
       const readParentID = (parentType) => {
         if (parentType == "event") {
+          console.log("1) eventID (video):", rootState.events.eventId);
           return rootState.events.eventId;
         } else if (parentType == "people") {
+          console.log("1) personId (person):", rootState.people.personId);
           return rootState.people.personId;
         }
       };
@@ -77,6 +77,7 @@ export default {
         .get()
         .then((querySnapshot) => {
           querySnapshot.docs.map((doc) => {
+            console.log("2) fetching videos:", parentID);
             let videoItem = doc.data();
             videos.push({
               ...videoItem,
@@ -85,11 +86,11 @@ export default {
           });
         });
       await commit("SET_VIDEOS", videos);
-      console.log(parentID);
+      console.log("3) fetched videos:", state.articles);
     },
 
     //* clears video resource form
-    clearVideoForm({ commit, state }) {
+    clearVideoForm({ commit }) {
       commit("SET_CURRENT_VIDEO_RESOURCE", {
         parentID: "",
         parentType: "",
@@ -100,7 +101,7 @@ export default {
         searchArray: [],
       });
       commit("SET_YOUTUBE_ID", "");
-      console.log(state.currentVideoResource);
+      // console.log(state.currentVideoResource);
     },
 
     //* handles submit video resource
@@ -126,14 +127,33 @@ export default {
       commit("SET_VIDEO_TOPIC_ID", rootState.topics.topicID);
       commit("SET_SEARCH_ARRAY", state.currentVideoResource.title);
 
-      console.log(state.currentVideoResource);
+      if (parentID) {
+        console.log("4) video has parentID");
 
-      //* adds new video to firestore
-      await resourcesRef.add(state.currentVideoResource).then(() => {
-        console.log("Submitted Video Resource");
-      });
+        //* adds new video to firestore
+        await resourcesRef.add(state.currentVideoResource).then(() => {
+          console.log("4) Submitted Video Resource");
+        });
+      } else {
+        console.log("4) video does not have parentID");
+      }
+      commit("UPDATE_VIDEOS");
+      console.log("4) new video:", state.currentArticle);
+      console.log("5) videos", state.articles);
       dispatch("clearVideoForm");
-      alert("Submitted Video Resource");
+      // alert("Submitted Video Resource");
+    },
+
+    async addVideoToDB({ state }) {
+      if (state.videos.length > 0) {
+        var batch = db.batch();
+        state.videos.forEach((doc) => {
+          var docRef = resourcesRef.doc(); //automatically generate unique id
+          batch.set(docRef, doc);
+        });
+        batch.commit();
+        console.log("9) Submitted Videos:", state.videos);
+      }
     },
 
     //* sets current video for edit
@@ -201,6 +221,13 @@ export default {
     UPDATE_SEARCH_ARRAY: (state, array) => {
       let newArray = array.split(" ");
       state.currentVideoResource.searchArray = newArray;
+    },
+    UPDATE_VIDEOS: (state) => state.videos.push(state.currentVideoResource),
+    UPDATE_VIDEOS_ID: (state, id) => {
+      state.videos.forEach(function(video) {
+        video.parentID = id;
+      });
+      console.log("8) update videos with eventids:", state.videos);
     },
   },
 };

@@ -62,20 +62,23 @@ export default {
     },
 
     //* submit new topic
-    async submitNewTopic({ state, commit }) {
+    async submitNewTopic({ state, commit, dispatch }) {
       commit("SET_SEARCH_ARRAY", state.currentTopic.title);
 
       await topicsRef
         .add(state.currentTopic)
         .then(() => {
           console.log("Submitted New Topic");
-          router.replace({ path: "/addcontent" });
+          router.replace({ path: "/topiclist" });
         })
         .catch((err) => {
           console.log(err);
           return false;
         });
       console.log(state.currentTopic);
+
+      //* clears the fields
+      dispatch("clearFields");
     },
 
     //* fetches all topics from firestore
@@ -100,6 +103,21 @@ export default {
       });
     },
 
+    //* clear fields
+    clearFields({ commit }) {
+      commit("SET_CURRENT_TOPIC", {
+        title: "",
+        introMD: "",
+        intro_thumbFile: "",
+        intro_thumbURL: "",
+        topic_thumbFile: "",
+        topic_thumbURL: "",
+        disabled: true,
+        timePeriod: null,
+        searchArray: [],
+      });
+    },
+
     //* topic id gets stored to the state and used in querying the specific topic
     async editTopic({ state, commit }, topic) {
       await commit("SET_ID", topic.id);
@@ -119,15 +137,28 @@ export default {
     },
 
     //* handles submit for edit topic
-    async submitEditTopic({ state, commit }) {
+    async submitEditTopic({ state, commit, dispatch }) {
       commit("UPDATE_SEARCH_ARRAY", state.currentTopic.title);
       await topicsRef
         .doc(state.topicID)
         .set(state.currentTopic, { merge: true })
         .then(() => {
           console.log("Submitted Edited Topic");
-          alert("Successfully edited topic");
+          // alert("Successfully edited topic");
         });
+      dispatch("closeForm", "TopicList", "/topiclist");
+    },
+
+    //* clears term id
+    clearTopicId({ commit }) {
+      commit("SET_ID", null);
+    },
+
+    //* handles the close button of a form
+    async closeForm({ dispatch }, name, path) {
+      await dispatch("clearTopicId");
+      router.push({ name: name, path: path });
+      console.log("closed topic form");
     },
 
     //* gets all articles for a topic

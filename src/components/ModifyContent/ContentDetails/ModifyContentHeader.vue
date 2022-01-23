@@ -2,22 +2,23 @@
   <div id="ModifyContentHeader">
     <!-- TITLE -->
     <v-container class="pb-10 ">
-      <v-row>
+      <v-row no-gutters>
+        <v-col lg="1" md="1" sm="12" xs="12">
+          <v-btn
+            fab
+            text
+            @click="
+              $router.push({ name: 'ModifyContent', path: '/modifycontent' })
+            "
+          >
+            <v-icon size="42" color="#3891A6">
+              mdi-arrow-left-drop-circle
+            </v-icon>
+          </v-btn>
+        </v-col>
         <v-col>
-          <div class="d-flex flex-start">
-            <v-btn
-              fab
-              text
-              @click="
-                $router.push({ name: 'ModifyContent', path: '/modifycontent' })
-              "
-            >
-              <v-icon size="42" color="#3891A6">
-                mdi-arrow-left-drop-circle
-              </v-icon>
-            </v-btn>
-            <div style="font-size: 36px">Modifying Topic Content</div>
-          </div>
+          <div style="font-size: 36px">Modifying Topic Content</div>
+          <div style="font-size: 24px">Topic: {{ title }}</div>
         </v-col>
       </v-row>
 
@@ -28,25 +29,21 @@
             class="d-flex row-flex"
             style="background-color: transparent;"
           >
-            <router-link
-              class="rounded-l-lg"
-              to="/addcontent/modifycontent/events"
-              exact
-            >
+            <router-link class="rounded-l-lg" to="/modifycontent/events" exact>
               Events
             </router-link>
 
-            <router-link to="/addcontent/modifycontent/historicalpeople" exact>
+            <router-link to="/modifycontent/historicalpeople" exact>
               Historical People
             </router-link>
 
-            <router-link to="/addcontent/modifycontent/terminology" exact>
+            <router-link to="/modifycontent/terminology" exact>
               Terminology
             </router-link>
 
             <router-link
               class="rounded-r-lg"
-              to="/addcontent/modifycontent/primarysources"
+              to="/modifycontent/primarysources"
               exact
             >
               Primary Sources
@@ -60,12 +57,16 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
 export default {
   methods: {
     ...mapActions("events", ["closeForm"]),
   },
   computed: {
     ...mapGetters("events", ["currentEvent", "currentEventId"]),
+    ...mapFields("topics", {
+      title: "currentTopic.title",
+    }),
   },
 };
 </script>

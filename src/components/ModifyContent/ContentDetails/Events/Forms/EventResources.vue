@@ -2,21 +2,26 @@
   <div id="EventResources">
     <v-card class="mx-auto pb-6" width="62vw" height="auto">
       <navbar />
-      <v-container fluid>
-        <div class="d-flex justify-end mb-2">
-          <v-btn
-            class="white--text"
-            width="140"
-            color="#3891A6"
-            elevation="2"
-            @click="$router.push({ name: 'Events', path: '/events' })"
-            >Save</v-btn
-          >
-        </div>
+      <!--  <v-container class="px-10">
         <v-row>
-          <v-col class="d-flex flex-column justify-start">
+          <v-col class="d-flex justify-end pb-6">
+            <v-btn
+              class="white--text"
+              width="140"
+              color="#3891A6"
+              elevation="2"
+              @click="handleSave"
+              >Save Event</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-container> -->
+      <v-container>
+        <v-row>
+          <v-col lg="6" md="6" sm="12">
             <videos />
-            <div class="pt-4"></div>
+          </v-col>
+          <v-col lg="6" md="6" sm="12">
             <articles />
           </v-col>
         </v-row>
@@ -26,23 +31,15 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import videos from "./Resources/Videos.vue";
 import articles from "./Resources/Articles";
 import navbar from "./EventCardHeader.vue";
-// import { mapActions } from 'vuex';
-// import { createNamespacedHelpers } from 'vuex'
-
-// const { mapActions } = createNamespacedHelpers('events')
 export default {
   components: { videos, articles, navbar },
-  // methods: {
-  //   ...mapActions('events',['fetchEventVideos', 'fetchEventArticles'])
-  // },
-  // mounted() {
-  //   this.fetchEventVideos()
-  //   // this.fetchEventArticles()
-  //   // this.$store.dispatch("events/fetchEventVideos");
-  // },
+  methods: {
+    ...mapActions("events", ["handleSave", "closeForm"]),
+  },
 };
 </script>
 

@@ -11,7 +11,7 @@
             width="400"
             color="#3891A6"
             elevation="2"
-            @click="addPersonHandler()"
+            @click="addPersonForm"
           >
             + Add a Historical Figure
           </v-btn>
@@ -48,7 +48,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import router from "../../../../router/index";
 import HistoricalPerson from "./HistoricalPerson/HistoricalPerson.vue";
 import navbar from "../ModifyContentHeader.vue";
 
@@ -65,17 +64,10 @@ export default {
     ...mapGetters("people", ["currentTopicPeople"]),
   },
   methods: {
-    ...mapActions("people", ["fetchPeople", "setPersonForm", "clearPersonId"]),
-    addPersonHandler() {
-      this.clearPersonId();
-      this.setPersonForm();
-      router.push({
-        name: "HistPeopleGeneral",
-        path: "/historicalpeople/general",
-      });
-    },
+    ...mapActions("people", ["fetchPeople", "addPersonForm", "clearPersonId"]),
   },
   created() {
+    this.clearPersonId();
     this.fetchPeople();
   },
 };

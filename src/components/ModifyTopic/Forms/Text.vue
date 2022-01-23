@@ -1,63 +1,32 @@
 <template>
-  <v-card class="mx-auto mt-4" width="70vw" min-height="400px">
-    <v-card class="mx-auto" width="70vw" color="#273238">
-      <div class="d-flex">
-        <v-container class="pt-8 pl-12 d-flex">
-          <div id="nav">
-            <router-link class="col" to="/addcontent/topiclist/general" exact
-              >General</router-link
-            >
-            <router-link class="col" to="/addcontent/topiclist/text" exact
-              >Text</router-link
-            >
-            <router-link class="col" to="/addcontent/topiclist/resources" exact
-              >Resources</router-link
-            >
-          </div>
-        </v-container>
-        <div class="d-flex justify-end">
-          <span class="material-icons">
-            <v-icon
-              size="40"
-              color="#3891A6"
-              @click="$router.push({ name: 'TopicList', path: '/topiclist' })"
-            >
-              disabled_by_default
-            </v-icon>
-          </span>
-        </div>
-      </div>
+  <div id="TopicText">
+    <v-card class="mx-auto mt-4 pb-6" width="70vw" height="auto">
+      <navbar />
+      <v-container class="px-10">
+        <v-row>
+          <v-col>
+            <div class="d-flex justify-start font-weight-bold">Intro:</div>
+            <v-textarea
+              v-model="introMD"
+              outlined
+              name="input-7-4"
+              label="Main event content (has markdown):"
+              height="15vw"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
-    <div class="mx-auto pt-6 d-flex justify-center">
-      <v-col cols="12" md="11">
-        <v-textarea
-          v-model="introMD"
-          outlined
-          name="input-7-4"
-          label="Main event content (has markdown):"
-          background-color="grey lighten-2"
-          height="15vw"
-        ></v-textarea>
-      </v-col>
-    </div>
-    <div class="d-flex justify-end pr-12">
-      <v-btn
-        class="white--text"
-        width="140"
-        color="#3891A6"
-        elevation="2"
-        @click="submitEditTopic"
-        >Save</v-btn
-      >
-    </div>
-  </v-card>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
+import navbar from "./TopicIntroHeader.vue";
 
 export default {
+  components: { navbar },
   data: () => ({
     topicMD: "",
   }),

@@ -58,9 +58,8 @@ export default {
 
     //* set topicId to track current topic contents
     setEventTopicId({ rootState, state, commit }) {
-      console.log(rootState.topics.topicID);
       commit("SET_EVENT_TOPIC_ID", rootState.topics.topicID);
-      console.log("set event topicid",  state.currentEvent.topicID);
+      console.log("set event topicid", state.currentEvent.topicID);
     },
 
     //* fetch all events under current topic id
@@ -80,23 +79,22 @@ export default {
             let eventItem = doc.data();
             //* appends unique event id to each event
             //* appends coordinates field if event does not yet have it
-            if(eventItem.coordinates == null ){
+            if (eventItem.coordinates == null) {
               eventsList.push({
                 ...eventItem,
                 id: doc.id,
-                coordinates: {}
+                coordinates: {},
+              });
+            } else {
+              eventsList.push({
+                ...eventItem,
+                id: doc.id,
               });
             }
-            else{
-            eventsList.push({
-              ...eventItem,
-              id: doc.id
-            });
-          }
           });
           commit("SET_TOPIC_EVENTS", eventsList);
         });
-      console.log("eventsList", eventsList);
+      console.log("Topic Events:", eventsList);
     },
 
     //* handler for add event button, clears the fields
@@ -124,31 +122,37 @@ export default {
       await commit("SET_CURRENT_EVENT", fields);
       await dispatch("clearEventId");
       router.push({ name: "EventGeneral", path: "/events/general" });
-      console.log(state.eventId);
+      console.log("Triggered adding event, eventID:", state.eventId);
     },
 
     //* handles submit new event data
-    async submitNewEvent({ state, dispatch, rootState, commit }) {
+    async submitNewEvent({ state, dispatch, commit }) {
       await dispatch("setEventTopicId");
       await commit("SET_SEARCH_ARRAY", state.currentEvent.title);
-      console.log("state", state.currentEvent);
-      await eventsRef.add(state.currentEvent).then(() => {
-        console.log("Event Added");
+      console.log("6) submitting new event", state.currentEvent);
+      await eventsRef.add(state.currentEvent).then(function(docRef) {
+        console.log("7) new Event id: ", docRef.id);
+        commit("articles/UPDATE_ARTICLES_ID", docRef.id, { root: true });
+        dispatch("articles/addArticleToDB", null, { root: true });
+        commit("videos/UPDATE_VIDEOS_ID", docRef.id, { root: true });
+        dispatch("videos/addVideoToDB", null, { root: true });
       });
       dispatch("closeForm", "Events", "/events");
-      console.log(rootState.topics.topicID);
     },
+
     //* handles submit for edit event
     async submitEditEvent({ state, dispatch, commit }) {
       await commit("UPDATE_SEARCH_ARRAY", state.currentEvent.title);
+
       await eventsRef
         .doc(state.eventId)
         .set(state.currentEvent, { merge: true })
         .then(() => {
-          console.log("Submit Edit" + state.currentEvent);
+          console.log("6) Submit Edited event" + state.currentEvent);
         });
       dispatch("closeForm", "Events", "/events");
     },
+
     //* clears the current eventId
     clearEventId({ commit }) {
       commit("CLEAR_EVENT_ID", null);
@@ -158,7 +162,7 @@ export default {
     async closeForm({ state, dispatch }, name, path) {
       await dispatch("clearEventId");
       router.push({ name: name, path: path });
-      console.log(state.eventId);
+      console.log("closed event form - should be null", state.eventId);
     },
 
     //* set current event for edit

@@ -14,18 +14,7 @@
               >
                 <v-img v-if="url" :src="url" height="100%"></v-img>
               </v-card>
-
               <div class="d-flex align-end">
-                <!-- <v-file-input
-                  class="pt-10"
-                  @change="Preview_image"
-                  v-model="image"
-                  accept="image/*"
-                  prepend-icon="none"
-                  append-icon="attach_file"
-                  placeholder="Upload TOPIC thumbnail"
-                >
-                </v-file-input> -->
                 <input
                   class="pl-4"
                   ref="input1"
@@ -40,7 +29,6 @@
               <v-text-field
                 v-model="title"
                 label="Title"
-                filled
                 outlined
                 dense
                 required
@@ -53,7 +41,6 @@
                 <v-text-field
                   v-model="startDate"
                   label="Start Date"
-                  filled
                   outlined
                   dense
                 ></v-text-field>
@@ -74,7 +61,6 @@
                 <v-text-field
                   v-model="endDate"
                   label="End Date"
-                  filled
                   outlined
                   dense
                 ></v-text-field>
@@ -99,23 +85,25 @@
                 :menu-props="{ top: false, offsetY: true }"
                 attach
                 chips
-                filled
                 multiple
                 outlined
+                dense
               ></v-select>
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="d-flex justify-end pt-14 pr-12">
+            <v-col class="pt-10">
               <v-btn
                 class="white--text"
                 width="140"
                 color="#3891A6"
                 elevation="2"
+                block
                 :disabled="!checkfield"
                 @click="handleSaveEvent"
-                >Save</v-btn
-              >
+                >Save Event
+                <v-icon small class="pl-2">mdi-plus-circle-outline</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -133,7 +121,6 @@ import navbar from "./EventCardHeader.vue";
 export default {
   components: { navbar },
   data: () => ({
-    // title: null,
     image: null,
     eventTheme: [
       "Society",
@@ -144,7 +131,6 @@ export default {
       "Technology",
       "Independent",
     ],
-
     disabled: 1,
     url: null,
     imageData: null,
@@ -184,14 +170,8 @@ export default {
     mountPreview() {
       this.url = this.thumbURL;
     },
-    resetbtn(e) {
-      if (this.checkfield) {
-        this.disabled = 0;
-      }
-      e.preventDefault();
-    },
     switchToggle(e, date) {
-      console.log(this.endEra);
+      console.log("toggling era", this.endEra);
       if (date === "start") {
         if (this.startEra) {
           this.eraStart = "AD";
@@ -209,7 +189,6 @@ export default {
     },
     previewImage(e) {
       this.uploadValue = 0;
-      console.log(e.target.files[0]);
       let file = e.target.files[0];
       let fileSize = file.size / 1024 / 1024;
       if (fileSize > 2) {
@@ -233,41 +212,29 @@ export default {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
-          console.log(error.message);
+          console.log("image upload error", error.message);
         },
         () => {
           this.uploadValue = 100;
           storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            // this.img1 = url;
-            // console.log(this.img1);
             this.thumbURL = url;
-            console.log(this.thumbURL);
           });
         }
       );
     },
     async handleSaveEvent() {
-      console.log("this.imageData SAVING", this.url);
       if (this.imageData) {
-        console.log("this.imageData", this.imageData);
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
           setTimeout(async () => {
             await this.handleSave();
           }, 2000);
         });
+      } else {
+        setTimeout(async () => {
+          await this.handleSave();
+        }, 2000);
       }
-      this.handleSave();
-
-      //  {
-      //   console.log("IN HERE");
-      //   this.thumbFile = "placeHolderImg.png";
-      //   this.thumbURL =
-      //     "https://firebasestorage.googleapis.com/v0/b/study-bites-1.appspot.com/o/placeHolderImg.png?alt=media&token=38eced07-54a4-4b3a-b2f9-49fa8e01da63";
-      //   setTimeout(async () => {
-      //     await this.handleSave();
-      //   }, 2000);
-      // }
     },
   },
   created() {
