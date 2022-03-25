@@ -392,14 +392,17 @@ export default {
 
       d3.select(window).on("resize", this.resize);
 
-      var width = 3.1 * document.querySelector("#mapCol").offsetWidth;
-      var mapRatio = 0.7;
-      var height = width * mapRatio;
+      // var width = 3.1 * document.querySelector("#mapCol").offsetWidth;
+      // var mapRatio = 0.7;
+      // var height = width * mapRatio;
+      var width = 1400;
+      var height = 800;
 
       var projection = d3.geo
         .mercator()
+        .center([0, 5])
         .scale(width / 1.5 / Math.PI)
-        .rotate([-1, 0])
+        .rotate([-10, 0])
         .translate([width / 1.5, (height * 1.35) / 2])
         .precision(0.1);
 
