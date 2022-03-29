@@ -13,6 +13,7 @@ export default {
     topicID: null,
     currentTopic: {
       title: "",
+      timespan: "",
       introMD: "",
       intro_thumbFile: "",
       intro_thumbURL: "",
@@ -49,6 +50,7 @@ export default {
       const fields = {
         title: "",
         introMD: "",
+        timespan: "",
         intro_thumbFile: "",
         intro_thumbURL: "",
         topic_thumbFile: "",
@@ -108,6 +110,7 @@ export default {
       commit("SET_CURRENT_TOPIC", {
         title: "",
         introMD: "",
+        timespan: "",
         intro_thumbFile: "",
         intro_thumbURL: "",
         topic_thumbFile: "",

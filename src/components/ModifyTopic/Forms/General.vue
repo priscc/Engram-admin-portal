@@ -39,6 +39,19 @@
             </v-text-field>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="timespan"
+              label="Time Span"
+              placeholder="(Beginning) Month ##, Year -- (End) Month ##, Year"
+              outlined
+              dense
+              required
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
         <div class=" d-flex justify-start font-weight-bold mt-6 mb-2">
           Intro:
         </div>
@@ -140,6 +153,7 @@ export default {
     ...mapGetters("topics", ["currentTopic", "currentId"]),
     ...mapFields("topics", [
       "currentTopic.title",
+      "currentTopic.timespan",
       "currentTopic.intro_thumbFile",
       "currentTopic.intro_thumbURL",
       "currentTopic.topic_thumbFile",
