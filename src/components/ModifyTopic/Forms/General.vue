@@ -57,12 +57,18 @@
         </div>
         <v-row class="ma-0">
           <v-col cols="8">
-            <v-textarea
+            <!--  <v-textarea
               v-model="introMD"
               outlined
               name="input-7-4"
               label="Main event content (has markdown):"
-            ></v-textarea>
+            ></v-textarea> -->
+            <!-- ****** -->
+            <quill-editor
+              v-model="introMD"
+              ref="myQuillEditor"
+              :options="editorOption"
+            />
           </v-col>
           <v-col cols="4">
             <v-card
@@ -119,11 +125,14 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
+import { mapMutations } from "vuex";
 import firebase from "firebase";
 import navbar from "./TopicIntroHeader.vue";
+import "quill/dist/quill.snow.css";
+import { quillEditor } from "vue-quill-editor";
 
 export default {
-  components: { navbar },
+  components: { navbar, quillEditor },
   data: () => ({
     image: null,
     timePeriodChoices: [1, 2, 3, 4],
@@ -137,8 +146,31 @@ export default {
     introImgData: null,
     topicImgData: null,
     imgDataArr: [],
+    content: "",
+    delta: undefined,
+    editorOption: {
+      debug: "info",
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, 3, false] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["bold", "italic", "underline", "strike"],
+          ["link"],
+        ],
+      },
+      placeholder: "Topic Introduction",
+      readOnly: true,
+      theme: "snow",
+    },
   }),
   props: ["topic"],
+  watch: {
+    introMD() {
+      if (this != null) {
+        this.delta = this.$refs.myQuillEditor.quill.getContents().ops;
+      }
+    },
+  },
   computed: {
     // selectsPeriod() {
     //   return this.selectedPeriod.length > 0;
@@ -166,6 +198,7 @@ export default {
   },
   methods: {
     ...mapActions("topics", ["submitEditTopic"]),
+    ...mapMutations("topics", ["INTRO_MARKUP"]),
     mountPreview() {
       this.urlIntro = this.intro_thumbURL;
       this.urlTopic = this.topic_thumbURL;
@@ -237,7 +270,10 @@ export default {
       });
     },
     async handleSaveEdit() {
-      console.log("save topic");
+      console.log("save topic", this.delta);
+
+      await this.INTRO_MARKUP(this.delta);
+
       // if (this.intro_thumbURL === "") {
       //   //   alert("Please provide images");
       //   // this.intro_thumbFile = "placeHolderImg.png";

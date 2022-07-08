@@ -14,7 +14,7 @@ export default {
     currentTopic: {
       title: "",
       timespan: "",
-      introMD: "",
+      introMD: undefined,
       intro_thumbFile: "",
       intro_thumbURL: "",
       topic_thumbFile: "",
@@ -22,6 +22,7 @@ export default {
       disabled: true,
       timePeriod: null,
       searchArray: [],
+      // markupIntro: undefined,
     },
     videoID: null,
     videoURL: null,
@@ -49,7 +50,7 @@ export default {
     async addTopicForm({ state, commit }) {
       const fields = {
         title: "",
-        introMD: "",
+        introMD: undefined,
         timespan: "",
         intro_thumbFile: "",
         intro_thumbURL: "",
@@ -58,6 +59,7 @@ export default {
         disabled: true,
         timePeriod: null,
         searchArray: [],
+        // markupIntro: undefined,
       };
       await commit("SET_CURRENT_TOPIC", fields);
       console.log(state.currentTopic);
@@ -66,7 +68,7 @@ export default {
     //* submit new topic
     async submitNewTopic({ state, commit, dispatch }) {
       commit("SET_SEARCH_ARRAY", state.currentTopic.title);
-
+      // console.log("MarkUP", state.currentTopic.markupIntro);
       await topicsRef
         .add(state.currentTopic)
         .then(() => {
@@ -109,7 +111,7 @@ export default {
     clearFields({ commit }) {
       commit("SET_CURRENT_TOPIC", {
         title: "",
-        introMD: "",
+        introMD: undefined,
         timespan: "",
         intro_thumbFile: "",
         intro_thumbURL: "",
@@ -118,6 +120,7 @@ export default {
         disabled: true,
         timePeriod: null,
         searchArray: [],
+        // markupIntro: undefined,
       });
     },
 
@@ -142,9 +145,10 @@ export default {
     //* handles submit for edit topic
     async submitEditTopic({ state, commit, dispatch }) {
       commit("UPDATE_SEARCH_ARRAY", state.currentTopic.title);
+      console.log("MarkUP", state.currentTopic.introMD);
       await topicsRef
         .doc(state.topicID)
-        .set(state.currentTopic, { merge: true })
+        .set(state.currentTopic)
         .then(() => {
           console.log("Submitted Edited Topic");
           // alert("Successfully edited topic");
@@ -202,6 +206,10 @@ export default {
     UPDATE_SEARCH_ARRAY: (state, array) => {
       let newArray = array.split(" ");
       state.currentTopic.searchArray = newArray;
+    },
+    INTRO_MARKUP: (state, i) => {
+      console.log("IN HERE, MARkUP");
+      state.currentTopic.introMD = i;
     },
     updateField,
   },
