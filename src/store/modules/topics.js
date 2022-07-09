@@ -22,7 +22,6 @@ export default {
       disabled: true,
       timePeriod: null,
       searchArray: [],
-      // markupIntro: undefined,
     },
     videoID: null,
     videoURL: null,
@@ -59,7 +58,6 @@ export default {
         disabled: true,
         timePeriod: null,
         searchArray: [],
-        // markupIntro: undefined,
       };
       await commit("SET_CURRENT_TOPIC", fields);
       console.log(state.currentTopic);
@@ -68,7 +66,7 @@ export default {
     //* submit new topic
     async submitNewTopic({ state, commit, dispatch }) {
       commit("SET_SEARCH_ARRAY", state.currentTopic.title);
-      // console.log("MarkUP", state.currentTopic.markupIntro);
+
       await topicsRef
         .add(state.currentTopic)
         .then(() => {
@@ -120,7 +118,6 @@ export default {
         disabled: true,
         timePeriod: null,
         searchArray: [],
-        // markupIntro: undefined,
       });
     },
 

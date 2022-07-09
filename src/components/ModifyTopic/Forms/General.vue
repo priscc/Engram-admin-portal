@@ -65,10 +65,11 @@
             ></v-textarea> -->
             <!-- ****** -->
             <quill-editor
-              v-model="introMD"
+              v-model="content"
               ref="myQuillEditor"
               :options="editorOption"
             />
+            <div id="editorContainer"></div>
           </v-col>
           <v-col cols="4">
             <v-card
@@ -128,8 +129,12 @@ import { mapFields } from "vuex-map-fields";
 import { mapMutations } from "vuex";
 import firebase from "firebase";
 import navbar from "./TopicIntroHeader.vue";
-import "quill/dist/quill.snow.css";
+
 import { quillEditor } from "vue-quill-editor";
+import Quill from "quill";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.bubble.css";
+import "quill/dist/quill.snow.css";
 
 export default {
   components: { navbar, quillEditor },
@@ -165,10 +170,8 @@ export default {
   }),
   props: ["topic"],
   watch: {
-    introMD() {
-      if (this != null) {
-        this.delta = this.$refs.myQuillEditor.quill.getContents().ops;
-      }
+    content() {
+      this.delta = this.$refs.myQuillEditor.quill.getContents().ops;
     },
   },
   computed: {
@@ -326,13 +329,27 @@ export default {
       e.preventDefault();
     },
   },
-  created() {
+  mounted() {
+    console.log("TYPEOF", typeof this.currentTopic.introMD);
+
+    if (typeof this.currentTopic.introMD === "string") {
+      this.content = this.currentTopic.introMD;
+    } else {
+      console.log("IN HERE OBJECT");
+      var quill = new Quill("#editorContainer");
+      quill.setContents(this.currentTopic.introMD);
+      var e = document.getElementById("editorContainer");
+      this.content = e.innerHTML;
+    }
     this.mountPreview();
   },
 };
 </script>
 
 <style lang="scss" scoped>
+#editorContainer {
+  display: none;
+}
 #imageThumbnail {
   width: 15vw;
   height: 10vw;

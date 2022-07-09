@@ -27,7 +27,7 @@
 			</v-col>
 		</v-row>
 		<v-row class="pt-16">
-			<v-col cols="12" class="d-flex justify-center">
+			<v-col cols="12">
 				<v-btn
 					@click="updatingSearch()"
 					lg
@@ -38,27 +38,18 @@
 					>Update Search Bar Autofill options
 				</v-btn>
 			</v-col>
-			<v-col cols="12" class="d-flex justify-center">
+			<v-col cols="12">
 				<v-btn lg dark outlined large color="purple">
 					Export database
 				</v-btn>
 			</v-col>
 		</v-row>
-		<p>{{ testTopic }}</p>
-
-		<br />
-		ss
-		<div id="editor-container"></div>
 	</v-container>
 </template>
 
 <script>
 import Header from "@/components/DashboardHeaders.vue";
 import { db } from "../firebase/db.js";
-import Quill from "quill";
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.bubble.css";
-import "quill/dist/quill.snow.css";
 
 export default {
 	components: { Header },
@@ -68,7 +59,6 @@ export default {
 			alert: false,
 			alertMessage: "",
 			testTopic: {},
-			editor: null,
 		};
 	},
 	methods: {
@@ -161,18 +151,6 @@ export default {
 					}.bind(this)
 				);
 		},
-	},
-	mounted() {
-		var docRef = db.collection("topics").doc("iI5dcofgJNyzBSLqkaTx");
-		docRef.get().then(
-			function(doc) {
-				this.testTopic = doc.data();
-				console.log(this.testTopic.markupIntro);
-				var quill = new Quill("#editor-container");
-
-				quill.setContents(this.testTopic.markupIntro);
-			}.bind(this)
-		);
 	},
 };
 </script>

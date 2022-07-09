@@ -43,11 +43,6 @@
           </v-select>
         </v-col>
       </v-row>
-      <quill-editor
-        v-model="content"
-        ref="myQuillEditor"
-        :options="editorOption"
-      />
       <v-row>
         <v-col>
           <div class="d-flex justify-end pr-12">
@@ -80,14 +75,11 @@
 <script>
 import { mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
-import { mapMutations } from "vuex";
 import firebase from "firebase";
 import Header from "../DashboardHeaders.vue";
-import "quill/dist/quill.snow.css";
-import { quillEditor } from "vue-quill-editor";
 
 export default {
-  components: { Header, quillEditor },
+  components: { Header },
   data: () => ({
     image: null,
     timePeriodChoices: [1, 2, 3, 4],
@@ -97,27 +89,8 @@ export default {
     img1: "",
     imageData: null,
     content: "",
-    delta: undefined,
-    editorOption: {
-      debug: "info",
-      modules: {
-        toolbar: [
-          [{ header: [1, 2, 3, false] }],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["bold", "italic", "underline", "strike"],
-          ["link"],
-        ],
-      },
-      placeholder: "Compose an epic...",
-      readOnly: true,
-      theme: "snow",
-    },
   }),
-  watch: {
-    content() {
-      this.delta = this.$refs.myQuillEditor.quill.getContents().ops;
-    },
-  },
+
   computed: {
     selectsPeriod() {
       return this.selectedPeriod.length > 0;
@@ -144,7 +117,7 @@ export default {
 
   methods: {
     ...mapActions("topics", ["submitNewTopic", "clearFields", "clearTopicId"]),
-    ...mapMutations("topics", ["setMarkup"]),
+
     toggle() {
       this.$nextTick(() => {
         this.selectedPeriod = [this.timePeriod.slice()];
@@ -195,7 +168,6 @@ export default {
       );
     },
     async handleSubmitNewTopic() {
-      await this.setMarkup(this.delta);
       if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
