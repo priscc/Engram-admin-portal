@@ -27,6 +27,7 @@ export default {
       topicID: [],
       searchArray: [],
     },
+    content_markup: null,
   },
 
   getters: {
@@ -189,6 +190,14 @@ export default {
     UPDATE_SEARCH_ARRAY: (state, array) => {
       let newArray = array.split(" ");
       state.currentPerson.searchArray = newArray;
+    },
+    CONTENT_MARKUP: (state, i) => {
+      console.log("IN HERE, PEOPLE MARkUP");
+      state.content_markup = i;
+    },
+    MAINMD_MARKUP: (state) => {
+      console.log("IN HERE, PEOPLE MARkUP");
+      state.currentPerson.mainMD = state.content_markup;
     },
   },
 };

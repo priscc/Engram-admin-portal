@@ -28,13 +28,19 @@
             <div class="d-flex justify-start font-weight-bold">
               Main Content:
             </div>
-            <v-textarea
-              v-model="mainMD"
+            <!-- <v-textarea
+              v-model="content"
               outlined
               name="input-7-4"
               label="Main event content (has markdown): "
               height="15vw"
-            ></v-textarea>
+            ></v-textarea> -->
+            <quill-editor
+              v-model="content"
+              ref="myQuillEditor"
+              :options="editorOption"
+            />
+            <div id="editorContainer"></div>
           </v-col>
         </v-row>
       </v-container>
@@ -43,12 +49,41 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import navbar from "./EventCardHeader.vue";
+import { quillEditor } from "vue-quill-editor";
+import Quill from "quill";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.bubble.css";
+import "quill/dist/quill.snow.css";
 
 export default {
-  components: { navbar },
+  components: { navbar, quillEditor },
+  data: () => ({
+    content: "",
+    delta: undefined,
+    editorOption: {
+      debug: "info",
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, 3, false] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["bold", "italic", "underline", "strike"],
+          ["link"],
+        ],
+      },
+      placeholder: "Event Content...",
+      readOnly: true,
+      theme: "snow",
+    },
+  }),
+  watch: {
+    content() {
+      this.delta = this.$refs.myQuillEditor.quill.getContents().ops;
+      this.CONTENT_MARKUP(this.delta);
+    },
+  },
   computed: {
     ...mapFields("events", [
       "currentEvent.descriptionMD",
@@ -57,8 +92,23 @@ export default {
   },
   methods: {
     ...mapActions("events", ["handleSave", "closeForm"]),
+    ...mapMutations("events", ["CONTENT_MARKUP"]),
+  },
+  mounted() {
+    if (typeof this.mainMD === "string") {
+      this.content = this.mainMD;
+    } else {
+      var quill = new Quill("#editorContainer");
+      quill.setContents(this.mainMD);
+      var e = document.getElementById("editorContainer");
+      this.content = e.innerHTML;
+    }
   },
 };
 </script>
 
-<style></style>
+<style>
+#editorContainer {
+  display: none;
+}
+</style>

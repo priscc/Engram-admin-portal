@@ -33,6 +33,7 @@ export default {
     },
     eventVideos: [],
     eventArticles: [],
+    content_markup: null,
   },
 
   getters: {
@@ -225,7 +226,14 @@ export default {
       let newArray = array.split(" ");
       state.currentEvent.searchArray = newArray;
     },
-    // SET_NEW_EVENT: (state, currentEvent) =>
+    CONTENT_MARKUP: (state, i) => {
+      console.log("IN HERE, EVENT MARkUP");
+      state.content_markup = i;
+    },
+    MAINMD_MARKUP: (state) => {
+      console.log("IN HERE, EVENT MARkUP");
+      state.currentEvent.mainMD = state.content_markup;
+    },
     updateField,
   },
 };

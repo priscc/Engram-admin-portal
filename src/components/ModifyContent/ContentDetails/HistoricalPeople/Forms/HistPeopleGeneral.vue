@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import firebase from "firebase";
 import navbar from "./HistPeopleCardHeader.vue";
@@ -121,6 +121,7 @@ export default {
       "currentPerson.name",
       "currentPerson.thumbURL",
       "currentPerson.thumbFile",
+      "content_markup",
     ]),
     ...mapFields("people", {
       dateOfBirth: "currentPerson.dateOfBirth.date",
@@ -143,6 +144,7 @@ export default {
   },
   methods: {
     ...mapActions("people", ["handleSave"]),
+    ...mapMutations("people", ["MAINMD_MARKUP"]),
     mountPreview() {
       this.url = this.thumbURL;
     },
@@ -206,6 +208,8 @@ export default {
       );
     },
     async savePersonHandler() {
+      console.log("saving person", this.content_markup);
+      await this.MAINMD_MARKUP();
       if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {

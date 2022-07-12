@@ -115,6 +115,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
+import { mapMutations } from "vuex";
 import firebase from "firebase";
 import navbar from "./EventCardHeader.vue";
 
@@ -145,6 +146,7 @@ export default {
       "currentEvent.title",
       "currentEvent.thumbURL",
       "currentEvent.thumbFile",
+      "content_markup",
     ]),
     ...mapFields("events", {
       selectedThemes: "currentEvent.theme",
@@ -167,6 +169,7 @@ export default {
   },
   methods: {
     ...mapActions("events", ["closeForm", "handleSave"]),
+    ...mapMutations("events", ["MAINMD_MARKUP"]),
     mountPreview() {
       this.url = this.thumbURL;
     },
@@ -223,6 +226,9 @@ export default {
       );
     },
     async handleSaveEvent() {
+      console.log("saving event", this.content_markup);
+      await this.MAINMD_MARKUP();
+
       if (this.imageData) {
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
