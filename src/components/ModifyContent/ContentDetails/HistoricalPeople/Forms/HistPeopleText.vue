@@ -5,13 +5,13 @@
       <v-container class="px-10">
         <v-row>
           <v-col>
-            <v-textarea
+            <!--  <v-textarea
               v-model="mainMD"
               outlined
               counter
               name="input-7-4"
               label="Main event content (has markdown):"
-            ></v-textarea>
+            ></v-textarea> -->
             <quill-editor
               v-model="content"
               ref="myQuillEditor"
