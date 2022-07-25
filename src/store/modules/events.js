@@ -144,7 +144,7 @@ export default {
     //* handles submit for edit event
     async submitEditEvent({ state, dispatch, commit }) {
       await commit("UPDATE_SEARCH_ARRAY", state.currentEvent.title);
-
+      console.log("state.currentEvent", state.currentEvent);
       await eventsRef
         .doc(state.eventId)
         .set(state.currentEvent, { merge: true })

@@ -17,40 +17,58 @@
         </v-row> -->
         <v-row>
           <v-col>
-            <div class="d-flex justify-start font-weight-bold">
-              Event Coordinates:
+            <div class="d-flex justify-start font-weight-bold mb-6">
+              Coordinates:
             </div>
-            <v-switch
-              v-model="switch1"
-              :label="`Is an dictionary array: ${switch1.toString()}`"
-            ></v-switch>
+            <v-text-field
+              v-model="mapTitle"
+              outlined
+              dense
+              label="Title"
+            ></v-text-field>
+            <p class="caption font-weight-light grey--text">
+              Coordinate formatting can be submitted as one of the following:
+
+            <ul>
+              <li>
+                {lat: #.##, lon: #.##} OR [{lat: #.##, lon: #.##}]
+              </li>
+              <li>
+                {lon: #.##, lat: #.##} OR [{lon: #.##, lat: #.##}]
+              </li>
+               <li>
+                lon can be sumitted as long if needed
+              </li>
+            </ul>
+            </p>
             <v-textarea
               outlined
               v-model="coordinatesMD"
-              filled
-              label="paste coordinates"
+              label="Coordinate(s)"
               rows="3"
               row-height="30"
             ></v-textarea>
-            <div class="d-flex justify-end">
+            <div class="d-flex flex-row justify-start align-start">
               <v-btn
-                class="white--text"
+                :disabled="mapTitle.length == 0"
+                class="d-flex ml-auto  white--text"
                 @click="cleaningCoordinates"
                 small
                 color="#3891A6"
                 elevation="2"
               >
-                Add Map
+                Add Coordinates
               </v-btn>
             </div>
           </v-col>
         </v-row>
         <v-row>
           <v-col id="mapCol">
-            <div class="legend d-flex align-center pb-2 font-weight-bold">
+            <div class=" d-flex align-center pb-2 font-weight-bold">
               View coordinates added in below map
             </div>
-            <div class="d-flex justify-start pb-10">
+
+            <div class="d-flex justify-start">
               <v-btn
                 @click="clearingCoordinates"
                 outlined
@@ -61,11 +79,18 @@
                 Clear
               </v-btn>
             </div>
-
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="pa-0">
+            <p
+              class="legend"
+              style="min-height: 30px; text-align: center"
+              width="100%"
+            ></p>
             <div class="view" id="map"></div>
           </v-col>
         </v-row>
-        <v-row> </v-row>
       </v-container>
     </v-card>
   </div>
@@ -339,8 +364,8 @@ export default {
       projection: null,
       path: null,
       svg: null,
+      mapTitle: "",
       coordinatesMD: "",
-      switch1: false,
     };
   },
   computed: {
@@ -349,31 +374,53 @@ export default {
   methods: {
     ...mapActions("events", ["handleSave", "closeForm"]),
     cleaningCoordinates() {
-      var str = this.coordinatesMD;
-
+      var submittedCoordinates = [...this.coordinatesMD];
       var polygon = [];
-      var start = 0;
-      var comma = 1;
-      var dic = { lon: 0, lat: 0 };
-      for (var i = 0; i < str.length; i++) {
-        if (str[i] == "," && comma == 1) {
-          dic.lon = parseFloat(str.substring(start, i));
-          start = i + 1;
-          comma++;
-        } else if (str[i] == "," && comma == 2) {
-          dic.lat = parseFloat(str.substring(start, i));
-          start = i;
-          comma++;
-        } else if (str[i] == " ") {
-          polygon.push(dic);
-          dic = { lon: 0, lat: 0 };
-          start = i + 1;
-          comma = 1;
+
+      var startofCoordinate = submittedCoordinates.reduce(
+        (results, currentValue, currentIndex) => {
+          if (currentValue === "{") {
+            results.push(currentIndex);
+            return results;
+          } else return results;
+        },
+        []
+      );
+
+      startofCoordinate.forEach((element) => {
+        function lastIndex(str) {
+          for (var i = 0; i < [...str].length; i++) {
+            if (
+              isNaN([...str][i]) &&
+              [...str][i] != "." &&
+              [...str][i] != "-"
+            ) {
+              return i;
+            }
+          }
         }
-      }
-      this.coordinatesMD = "";
-      var key = Object.keys(this.coordinates).length + 1;
+        let coorSubstring = this.coordinatesMD.substring(element);
+        var dic = { lat: 0, lon: 0 };
+
+        var latIndex = coorSubstring.indexOf("lat") + 5;
+        var latSubString = coorSubstring.substring(latIndex);
+        dic.lat = parseFloat(
+          latSubString.substring(0, lastIndex(latSubString))
+        );
+        var lonIndex = coorSubstring.indexOf("lon") + 5;
+        var lonSubString = coorSubstring.substring(lonIndex);
+        dic.lon = parseFloat(
+          lonSubString.substring(0, lastIndex(lonSubString))
+        );
+        polygon.push(dic);
+      });
+
+      
+      var key = this.mapTitle;
       this.coordinates[key] = polygon;
+      console.log(this.coordinates);
+      this.coordinatesMD = "";
+      this.mapTitle = "";
       this.primary();
     },
     clearingCoordinates() {
@@ -481,13 +528,53 @@ export default {
       console.log("in primary" + coordinates);
 
       Object.keys(coordinates).forEach((map) => {
-        console.log("in foreach" + map);
-        svg
-          .append("path")
-          .attr("d", lineFunction(coordinates[map]))
-          .attr("stroke", "red")
-          .attr("stroke-width", 2)
-          .attr("fill", "#BDFF00");
+        console.log("in foreach " + map, " ", coordinates[map].length);
+        if (coordinates[map].length > 1) {
+          svg
+            .append("path")
+            .attr("d", lineFunction(coordinates[map]))
+            .attr("stroke", "red")
+            .attr("stroke-width", 2)
+            .attr("fill", "#BDFF00")
+            .on("mouseover", function() {
+              var region = d3.select(this);
+              region.attr("fill", "#ff9800");
+              document.querySelector(".legend").innerText = map;
+            })
+            .on("mouseout", function() {
+              var region = d3.select(this);
+              region.attr("fill", "#BDFF00");
+              document.querySelector(".legend").innerText = "";
+            });
+        } else {
+          svg
+            .selectAll("myCircles")
+            .data(coordinates[map])
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) {
+              return projection([d.lon, d.lat])[0];
+            })
+            .attr("cy", function(d) {
+              return projection([d.lon, d.lat])[1];
+            })
+            .attr("r", 10)
+            .style("fill", "#BDFF00")
+            .attr("stroke", "red")
+            .attr("stroke-width", 4)
+            // .attr("fill-opacity", 0.4)
+            .on("mouseover", function() {
+              // console.log("bleep", this);
+              var region = d3.select(this);
+              region.attr("fill", "#ff9800");
+              document.querySelector(".legend").innerText = map;
+            })
+            .on("mouseout", function() {
+              var region = d3.select(this);
+              region.attr("fill", "#BDFF00");
+              document.querySelector(".legend").innerText = "";
+            });
+        }
       });
     },
   },
