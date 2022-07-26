@@ -27,17 +27,14 @@
               label="Title"
             ></v-text-field>
             <p class="caption font-weight-light grey--text">
-              Coordinate formatting can be submitted as one of the following:
+              Coordinates should be copied directed from the raw xml file downloaded from google maps.
 
             <ul>
               <li>
-                {lat: #.##, lon: #.##} OR [{lat: #.##, lon: #.##}]
+                You can upload a whole list of coordinates to highlight a whole region.
               </li>
               <li>
-                {lon: #.##, lat: #.##} OR [{lon: #.##, lat: #.##}]
-              </li>
-               <li>
-                lon can be sumitted as long if needed
+                You can upload one coordinate to add a specific location.
               </li>
             </ul>
             </p>
@@ -374,47 +371,71 @@ export default {
   methods: {
     ...mapActions("events", ["handleSave", "closeForm"]),
     cleaningCoordinates() {
-      var submittedCoordinates = [...this.coordinatesMD];
+      // var submittedCoordinates = [...this.coordinatesMD];
+      // var polygon = [];
+
+      // var startofCoordinate = submittedCoordinates.reduce(
+      //   (results, currentValue, currentIndex) => {
+      //     if (currentValue === "{") {
+      //       results.push(currentIndex);
+      //       return results;
+      //     } else return results;
+      //   },
+      //   []
+      // );
+
+      // startofCoordinate.forEach((element) => {
+      //   function lastIndex(str) {
+      //     for (var i = 0; i < [...str].length; i++) {
+      //       if (
+      //         isNaN([...str][i]) &&
+      //         [...str][i] != "." &&
+      //         [...str][i] != "-"
+      //       ) {
+      //         return i;
+      //       }
+      //     }
+      //   }
+      //   let coorSubstring = this.coordinatesMD.substring(element);
+      //   var dic = { lat: 0, lon: 0 };
+
+      //   var latIndex = coorSubstring.indexOf("lat") + 5;
+      //   var latSubString = coorSubstring.substring(latIndex);
+      //   dic.lat = parseFloat(
+      //     latSubString.substring(0, lastIndex(latSubString))
+      //   );
+      //   var lonIndex = coorSubstring.indexOf("lon") + 5;
+      //   var lonSubString = coorSubstring.substring(lonIndex);
+      //   dic.lon = parseFloat(
+      //     lonSubString.substring(0, lastIndex(lonSubString))
+      //   );
+      //   polygon.push(dic);
+      // });
+
+      var str = this.coordinatesMD;
       var polygon = [];
-
-      var startofCoordinate = submittedCoordinates.reduce(
-        (results, currentValue, currentIndex) => {
-          if (currentValue === "{") {
-            results.push(currentIndex);
-            return results;
-          } else return results;
-        },
-        []
-      );
-
-      startofCoordinate.forEach((element) => {
-        function lastIndex(str) {
-          for (var i = 0; i < [...str].length; i++) {
-            if (
-              isNaN([...str][i]) &&
-              [...str][i] != "." &&
-              [...str][i] != "-"
-            ) {
-              return i;
-            }
-          }
+      var start = 0;
+      var comma = 1;
+      var dic = { lon: 0, lat: 0 };
+      for (var i = 0; i < str.length; i++) {
+        if (str[i] == "," && comma == 1) {
+          console.log("in if")
+          dic.lon = parseFloat(str.substring(start, i));
+          start = i + 1;
+          comma++;
+        } else if (str[i] == "," && comma == 2) {
+          console.log("in else if common")
+          dic.lat = parseFloat(str.substring(start, i));
+          start = i;
+          comma++;
+        } else if (str[i] == " " || i == str.length-1) {
+          console.log("in else if space")
+          polygon.push(dic);
+          dic = { lon: 0, lat: 0 };
+          start = i + 1;
+          comma = 1;
         }
-        let coorSubstring = this.coordinatesMD.substring(element);
-        var dic = { lat: 0, lon: 0 };
-
-        var latIndex = coorSubstring.indexOf("lat") + 5;
-        var latSubString = coorSubstring.substring(latIndex);
-        dic.lat = parseFloat(
-          latSubString.substring(0, lastIndex(latSubString))
-        );
-        var lonIndex = coorSubstring.indexOf("lon") + 5;
-        var lonSubString = coorSubstring.substring(lonIndex);
-        dic.lon = parseFloat(
-          lonSubString.substring(0, lastIndex(lonSubString))
-        );
-        polygon.push(dic);
-      });
-
+      }
       
       var key = this.mapTitle;
       this.coordinates[key] = polygon;
