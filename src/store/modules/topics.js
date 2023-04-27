@@ -14,7 +14,7 @@ export default {
     currentTopic: {
       title: "",
       timespan: "",
-      introMD: undefined,
+      introMD: "",
       intro_thumbFile: "",
       intro_thumbURL: "",
       topic_thumbFile: "",
@@ -65,8 +65,9 @@ export default {
 
     //* submit new topic
     async submitNewTopic({ state, commit, dispatch }) {
+      console.log("in submitNewTopic");
       commit("SET_SEARCH_ARRAY", state.currentTopic.title);
-
+      console.log("in 2 submitNewTopic", state.currentTopic);
       await topicsRef
         .add(state.currentTopic)
         .then(() => {
@@ -109,7 +110,7 @@ export default {
     clearFields({ commit }) {
       commit("SET_CURRENT_TOPIC", {
         title: "",
-        introMD: undefined,
+        introMD: "",
         timespan: "",
         intro_thumbFile: "",
         intro_thumbURL: "",
@@ -196,9 +197,12 @@ export default {
     SET_CURRENT_TOPIC: (state, topic) => (state.currentTopic = topic),
     SET_ARTICLES: (state, articles) => (state.articles = articles),
     SET_SEARCH_ARRAY: (state, array) => {
+      console.log("in 1 SET_SEARCH_ARRAY", array);
       //* splits the words into strings and stores in newArray
       let newArray = array.split(" ");
+      console.log("in 2 SET_SEARCH_ARRAY", newArray);
       state.currentTopic.searchArray.push(...newArray);
+      console.log("in 3 SET_SEARCH_ARRAY", state.currentTopic);
     },
     UPDATE_SEARCH_ARRAY: (state, array) => {
       let newArray = array.split(" ");

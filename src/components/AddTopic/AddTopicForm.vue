@@ -168,7 +168,9 @@ export default {
       );
     },
     async handleSubmitNewTopic() {
+      console.log("currentTopic.introMD", this.introMD)
       if (this.imageData) {
+        console.log("in this.imageData")
         let imgPromise = Promise.resolve(this.onUpload());
         await imgPromise.then(async () => {
           setTimeout(async () => {
@@ -176,6 +178,7 @@ export default {
           }, 2000);
         });
       } else {
+        console.log("not in this.imageData")
         setTimeout(async () => {
           await this.submitNewTopic();
         }, 2000);
