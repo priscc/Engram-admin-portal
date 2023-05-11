@@ -33,6 +33,10 @@
               Events
             </router-link>
 
+            <router-link to="/modifycontent/trends" exact>
+              Trends
+            </router-link>
+
             <router-link to="/modifycontent/historicalpeople" exact>
               Historical People
             </router-link>

@@ -22,6 +22,7 @@ export default {
       disabled: true,
       timePeriod: null,
       searchArray: [],
+      unit: "",
     },
     videoID: null,
     videoURL: null,
@@ -58,6 +59,7 @@ export default {
         disabled: true,
         timePeriod: null,
         searchArray: [],
+        unit: "",
       };
       await commit("SET_CURRENT_TOPIC", fields);
       console.log(state.currentTopic);
@@ -119,6 +121,7 @@ export default {
         disabled: true,
         timePeriod: null,
         searchArray: [],
+        unit: "",
       });
     },
 

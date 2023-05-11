@@ -4,6 +4,7 @@ import { db } from "../firebase/db.js";
 import createPersistedState from "vuex-persistedstate";
 import topics from "./modules/topics";
 import events from "./modules/events";
+import trends from "./modules/trends";
 import people from "./modules/people";
 import terminology from "./modules/terminology";
 import works from "./modules/works";
@@ -17,6 +18,7 @@ export default new Vuex.Store({
   strict: true,
   modules: {
     events,
+    trends,
     topics,
     people,
     terminology,
@@ -28,6 +30,7 @@ export default new Vuex.Store({
     createPersistedState({
       paths: [
         "events",
+        "trends",
         "topics",
         "people",
         "terminology",

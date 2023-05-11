@@ -52,6 +52,31 @@
             </v-text-field>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <p><small><i>Assign a category to make the topic visible within its relevant section.</i></small></p>
+            <v-combobox
+            class="pa-0"
+            v-model="unit"
+              label="Unit"
+              :items="[
+                'Unit 1: The Global Tapestry',
+                'Unit 2: Networks of Exchange',
+                'Unit 3: Land-Based Empires',
+                'Unit 4: Transoceanic Interconnections',
+                'Unit 5: Revolutions',
+                'Unit 6: Consequences of Industrialization',
+                'Unit 7: Global Conflict',
+                'Unit 8: Cold War and Decolonization',
+                'Unit 9: Globalization',
+              ]"
+              dense
+              outlined
+              clearable
+            ></v-combobox>
+            
+          </v-col>
+        </v-row>
         <div class=" d-flex justify-start font-weight-bold mt-6 mb-2">
           Intro:
         </div>
@@ -197,6 +222,7 @@ export default {
       // 'currentTopic.disabled',
       "currentTopic.timePeriod",
       "currentTopic.searchArray",
+      "currentTopic.unit",
     ]),
   },
   methods: {

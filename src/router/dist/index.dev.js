@@ -33,6 +33,8 @@ var _EventText = _interopRequireDefault(require("@/components/ModifyContent/Cont
 
 var _EventResources = _interopRequireDefault(require("@/components/ModifyContent/ContentDetails/Events/Forms/EventResources.vue"));
 
+var _Trends = _interopRequireDefault(require("@/components/ModifyContent/ContentDetails/Trends/Trends.vue"));
+
 var _HistoricalPeople = _interopRequireDefault(require("@/components/ModifyContent/ContentDetails/HistoricalPeople/HistoricalPeople.vue"));
 
 var _HistPeopleGeneral = _interopRequireDefault(require("@/components/ModifyContent/ContentDetails/HistoricalPeople/Forms/HistPeopleGeneral.vue"));
@@ -148,6 +150,13 @@ var router = new _vueRouter["default"]({
     path: '/addcontent/modifycontent/events/resources',
     name: 'EventResources',
     component: _EventResources["default"],
+    meta: {
+      requiresAuth: true
+    }
+  },{
+    path: '/addcontent/modifycontent/trends',
+    name: 'Trends',
+    component: _Trends["default"],
     meta: {
       requiresAuth: true
     }

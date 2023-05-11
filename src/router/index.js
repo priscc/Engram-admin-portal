@@ -17,6 +17,7 @@ import EventGeneral from "@/components/ModifyContent/ContentDetails/Events/Forms
 import EventMap from "@/components/ModifyContent/ContentDetails/Events/Forms/EventMap.vue";
 import EventText from "@/components/ModifyContent/ContentDetails/Events/Forms/EventText.vue";
 import EventResources from "@/components/ModifyContent/ContentDetails/Events/Forms/EventResources.vue";
+import Trends from "@/components/ModifyContent/ContentDetails/Trends/Trends.vue";
 import HistoricalPeople from "@/components/ModifyContent/ContentDetails/HistoricalPeople/HistoricalPeople.vue";
 import HistPeopleGeneral from "@/components/ModifyContent/ContentDetails/HistoricalPeople/Forms/HistPeopleGeneral.vue";
 import HistPeopleText from "@/components/ModifyContent/ContentDetails/HistoricalPeople/Forms/HistPeopleText.vue";
@@ -147,6 +148,14 @@ let router = new Router({
       path: "/modifycontent/events/resources",
       name: "EventResources",
       component: EventResources,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+        {
+      path: "/modifycontent/trends",
+      name: "Trends",
+      component: Trends,
       meta: {
         requiresAuth: true,
       },
