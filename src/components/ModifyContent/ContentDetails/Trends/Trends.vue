@@ -11,12 +11,12 @@
             v-model="type"
             label="Theme"
             :items="[
-              'Environment',
-              'Cultural',
-              'Government',
-              'Economic',
-              'Social',
-              'Technology',
+              'environment',
+              'cultural',
+              'government',
+              'economic',
+              'social',
+              'technology',
             ]"
             dense
             outlined

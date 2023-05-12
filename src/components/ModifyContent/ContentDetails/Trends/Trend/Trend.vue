@@ -103,7 +103,7 @@
         </div>
       </div>
       <div class="d-flex flex-column pt-6 pl-4 pr-2">
-        <div class="text-left text-h6 font-weight-medium">
+        <div class="text-left text-h6 font-weight-medium text-decoration-underline">
           {{ topicTrend.type }}
         </div>
         <div class="text-left subtitle-1 py-2" style="line-height: 20px">
