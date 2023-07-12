@@ -1,4 +1,4 @@
-# study-bites
+# Engram-Portal
 
 ## Project setup
 ```
