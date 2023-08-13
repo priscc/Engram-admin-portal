@@ -22,12 +22,30 @@
             outlined
             clearable
           ></v-combobox>
+          
+
+          <!-- new dropdown for Trend Type-->
+          <v-combobox
+            class="pa-0"
+            v-model="type"
+            label="Trend Type"
+            :items="[
+              'change',
+              'continuity',
+            ]"
+            dense
+            outlined
+            clearable
+          ></v-combobox>
+
+
           <v-textarea
             v-model="trend"
             outlined
             name="input-7-4"
             label="Trend:"
           ></v-textarea>
+
         </v-col>
 
         <v-col>

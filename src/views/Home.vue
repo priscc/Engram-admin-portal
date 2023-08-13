@@ -19,7 +19,7 @@
 		<v-row>
 			<v-col>
 				<Header
-					v-bind:header="'Hello!'"
+					v-bind:header="'Hello!!'"
 					v-bind:description="
 						'Buttons below are simplied actions you can take to update Engram`s database'
 					"
