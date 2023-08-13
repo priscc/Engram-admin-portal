@@ -12,7 +12,7 @@
             label="Theme"
             :items="[
               'environment',
-              'cultural',
+              'culture',
               'government',
               'economic',
               'social',
@@ -22,13 +22,12 @@
             outlined
             clearable
           ></v-combobox>
-          
 
-          <!-- new dropdown for Trend Type-->
+          <!-- new dropdown for Trend Type CHANGE OR CONTINUITY-->
           <v-combobox
             class="pa-0"
-            v-model="type"
-            label="Trend Type"
+            v-model="trendName"
+            label="Trend Name"
             :items="[
               'change',
               'continuity',
@@ -37,7 +36,6 @@
             outlined
             clearable
           ></v-combobox>
-
 
           <v-textarea
             v-model="trend"
@@ -55,7 +53,7 @@
                 class="white--text"
                 width="180"
                 color="#3891A6"
-                :disabled="!checkfield"
+                
                 elevation="2"
                 @click="resetFields"
                 >Reset</v-btn
@@ -105,7 +103,7 @@ export default {
   },
   computed: {
     checkfield() {
-      return this.type && this.trend;
+      return this.type && this.trend && this.trendName;
     },
     ...mapGetters("trends", [
       "currentTopicTrends",
@@ -116,6 +114,7 @@ export default {
     ...mapFields("trends", [
       "currentTrend.type",
       "currentTrend.trend",
+      "currentTrend.trendName",
     ]),
   },
   methods: {
@@ -133,6 +132,7 @@ export default {
     resetFields() {
       this.clearFields();
       this.clearTrendId();
+      console.log("reset pressed");
     },
   },
   created() {
