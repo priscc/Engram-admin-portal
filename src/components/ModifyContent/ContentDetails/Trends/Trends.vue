@@ -53,7 +53,7 @@
                 class="white--text"
                 width="180"
                 color="#3891A6"
-                
+                :disabled="!checkfield"
                 elevation="2"
                 @click="resetFields"
                 >Reset</v-btn
