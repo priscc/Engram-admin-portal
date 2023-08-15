@@ -55,7 +55,12 @@ export default {
 	components: { Header },
 	data() {
 		return {
-			searchItems: [],
+			topicSearchItems: [],
+			eventSearchItems1: [],
+			eventSearchItems2: [],
+			peopleSearchItems: [],
+			workSearchItems: [],
+			termSearchItems: [],
 			alert: false,
 			alertMessage: "",
 			testTopic: {},
@@ -66,8 +71,23 @@ export default {
 			console.log("grabbing autofill search items");
 			await this.grabbingDBcontent().then(() => {
 				db.collection("searchBar")
-					.doc("bESicXCl5B8APjFo5TAI")
-					.set({ searchItems: this.searchItems }, { merge: true });
+					.doc("topicSearchBarOptions")
+					.set({ searchItems: this.topicSearchItems }, { merge: true });
+				db.collection("searchBar")
+					.doc("eventSearchBarOptions1")
+					.set({ searchItems: this.eventSearchItems1 }, { merge: true });
+				db.collection("searchBar")
+					.doc("eventSearchBarOptions2")
+					.set({ searchItems: this.eventSearchItems2 }, { merge: true });
+				db.collection("searchBar")
+					.doc("peopleSearchBarOptions")
+					.set({ searchItems: this.peopleSearchItems }, { merge: true });
+				db.collection("searchBar")
+					.doc("workSearchBarOptions")
+					.set({ searchItems: this.workSearchItems }, { merge: true });
+				db.collection("searchBar")
+					.doc("termSearchBarOptions")
+					.set({ searchItems: this.termSearchItems }, { merge: true });
 				this.alert = true;
 				this.alertMessage =
 					"Search bar autofill content has been updated";
@@ -80,7 +100,7 @@ export default {
 				.then(
 					function(querySnapshot) {
 						querySnapshot.docs.map((doc) => {
-							this.searchItems.push({
+							this.topicSearchItems.push({
 								document: doc.data(),
 								collection: "topics",
 								title: "Topic: " + doc.data().title,
@@ -96,12 +116,23 @@ export default {
 				.then(
 					function(querySnapshot) {
 						querySnapshot.docs.map((doc) => {
-							this.searchItems.push({
+							if(this.eventSearchItems1.length < 50){
+								this.eventSearchItems1.push({
+									document: doc.data(),
+									collection: "events",
+									title: "Event: " + doc.data().title,
+									topicID: doc.data().topicID[0],
+								});
+							}
+							else{
+								this.eventSearchItems2.push({
 								document: doc.data(),
 								collection: "events",
 								title: "Event: " + doc.data().title,
 								topicID: doc.data().topicID[0],
 							});
+							}
+							
 						});
 					}.bind(this)
 				);
@@ -111,7 +142,8 @@ export default {
 				.then(
 					function(querySnapshot) {
 						querySnapshot.docs.map((doc) => {
-							this.searchItems.push({
+							console.log("updating Search PEOPLE" + doc.data().name)
+							this.peopleSearchItems.push({
 								document: doc.data(),
 								collection: "people",
 								title: "People: " + doc.data().name,
@@ -126,7 +158,7 @@ export default {
 				.then(
 					function(querySnapshot) {
 						querySnapshot.docs.map((doc) => {
-							this.searchItems.push({
+							this.workSearchItems.push({
 								document: doc.data(),
 								collection: "works",
 								title: "Primary Source: " + doc.data().title,
@@ -141,7 +173,7 @@ export default {
 				.then(
 					function(querySnapshot) {
 						querySnapshot.docs.map((doc) => {
-							this.searchItems.push({
+							this.termSearchItems.push({
 								document: doc.data(),
 								collection: "terminology",
 								title: "Term: " + doc.data().term,
