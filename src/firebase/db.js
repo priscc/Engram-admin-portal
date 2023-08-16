@@ -22,15 +22,16 @@ import "firebase/firestore";
 
 // Get a Firestore instance
 export const db = firebase
-    .initializeApp({
-        apiKey: "AIzaSyDB3uRU_Ck5skQjN77N5jT-g4SM8XsuvCY",
-        authDomain: "engram-site-dev.firebaseapp.com",
-        projectId: "engram-site-dev",
-        storageBucket: "engram-site-dev.appspot.com",
-        messagingSenderId: "858331999177",
-        appId: "1:858331999177:web:3d3856b68091c788ae5618"
-    })
-    .firestore();
+	.initializeApp({
+		apiKey: "AIzaSyDMw3cG7JR-RrrC-aWNugk_TS1oLBV58qw",
+		authDomain: "ap-studybites.firebaseapp.com",
+		projectId: "ap-studybites",
+		storageBucket: "ap-studybites.appspot.com",
+		messagingSenderId: "386062840730",
+		appId: "1:386062840730:web:5f3a0c6b23f0be15220023",
+		measurementId: "G-8XJMW8N6QS",
+	})
+	.firestore();
 
 // Export types that exists in Firestore
 // This is not always necessary, but it's used in other examples
