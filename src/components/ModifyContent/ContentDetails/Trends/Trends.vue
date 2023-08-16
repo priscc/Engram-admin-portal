@@ -27,7 +27,7 @@
           <v-combobox
             class="pa-0"
             v-model="trendName"
-            label="Trend Name"
+            label="Trend Type"
             :items="[
               'change',
               'continuity',
