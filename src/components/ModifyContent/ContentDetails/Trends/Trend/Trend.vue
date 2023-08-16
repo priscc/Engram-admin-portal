@@ -27,7 +27,7 @@
             </template>
             <v-card>
               <v-card-title class="headline d-flex justify-center">
-                <div class="mt-4">Editing a term</div>
+                <div class="pr-2">Editing a term </div>
                 <div>{{type}}</div>
                 <div></div>
               </v-card-title>
@@ -39,11 +39,23 @@
                     label="Theme"
                     :items="[
                       'Environment',
-                      'Cultural',
+                      'Culture',
                       'Government',
                       'Economic',
                       'Social',
                       'Technology',
+                    ]"
+                    dense
+                    outlined
+                    clearable
+                  ></v-combobox>
+                  <v-combobox
+                    class="pa-0"
+                    v-model="trendName"
+                    label="Trend Type"
+                    :items="[
+                      'change',
+                      'continuity',
                     ]"
                     dense
                     outlined
@@ -106,6 +118,9 @@
         <div class="text-left text-h6 font-weight-medium text-decoration-underline">
           {{ topicTrend.type }}
         </div>
+        <div class="text-left text-h8 font-weight-bold">
+          {{ topicTrend.trendName }}
+        </div>
         <div class="text-left subtitle-1 py-2" style="line-height: 20px">
           {{ topicTrend.trend }}
         </div>
@@ -129,7 +144,7 @@ export default {
   name: "Trend",
   props: ["topicTrend"],
   computed: {
-    ...mapFields("trends", ["currentTrend.type", "currentTrend.trend"]),
+    ...mapFields("trends", ["currentTrend.type", "currentTrend.trend", "currentTrend.trendName"]),
   },
   methods: {
     ...mapActions("trends", [
@@ -142,7 +157,7 @@ export default {
     async submitTrendHandler() {
       setTimeout(async () => {
             await this.submitEditTrend();
-          }, 2000);
+          }, 1000);
       this.saveDialog = false;
       console.log("Submitted Edit");
     },
