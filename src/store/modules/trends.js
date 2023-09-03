@@ -87,13 +87,20 @@ export default {
 
         //* handles submit new trend data
         async submitNewTrend({ commit, rootState, state, dispatch }) {
+
+            const createdFields = {
+                name: state.userFirstName + " " + state.userLastName,
+                username: state.userEmail,
+                timestamp_created: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+
+            commit("SET_CREATED_FIELDS", createdFields);
+
             await commit("SET_TREND_TOPIC_ID", rootState.topics.topicID);
             //* adds new trend in firestore database
             await trendRef.add(state.currentTrend).then(() => {
                 console.log("Trend Added");
             });
-
-
 
             //* fetch new list of trends
             dispatch("fetchTrends");
@@ -101,17 +108,6 @@ export default {
             //* clears the fields
             dispatch("clearFields");
 
-            var today = new Date();
-            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            var dateTime = date + ' ' + time;
-
-            console.log("------NEW------");
-            console.log(dateTime);
-            console.log(state.userEmail);
-            console.log(state.userFirstName);
-            console.log(state.userLastName);
-            console.log("------NEW------");
         },
 
         //* clear fields
@@ -154,22 +150,6 @@ export default {
             console.log(state.userEmail);
 
             commit("SET_UPDATED_FIELDS", updatedFields);
-
-            // state.updated.name = state.userFirstName + " " + state.userLastName;
-            // state.updated.username = state.userEmail;
-            // state.updated.timestamp_updated = firebase.firestore.FieldValue.serverTimestamp();
-
-            // var today = new Date();
-            // var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-            // var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            // var dateTime = date + ' ' + time;
-
-            // console.log("------UPDATE------");
-            // console.log(dateTime);
-            // console.log(state.userEmail);
-            // console.log(state.userFirstName);
-            // console.log(state.userLastName);
-            // console.log("------UPDATE------");
 
             await trendRef
                 .doc(state.trendId)
@@ -225,6 +205,10 @@ export default {
 
         SET_UPDATED_FIELDS(state, updatedFields) {
             state.currentTrend.updated = updatedFields;
+        },
+
+        SET_CREATED_FIELDS(state, createdFields) {
+            state.currentTrend.created = createdFields;
         },
         // UPDATE_TERM: (state, term) => (state.terms[state.termIndex] = term),
     },
