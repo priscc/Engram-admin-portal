@@ -2,12 +2,18 @@ import { vuexfireMutations } from "vuexfire";
 import { getField, updateField } from "vuex-map-fields";
 import { db } from "../../firebase/db";
 
+import firebase from "firebase";
+
 const trendRef = db.collection("trends");
 
 export default {
     namespaced: true,
 
     state: {
+        userEmail: null,
+        userFirstName: null,
+        userLastName: null,
+
         trends: [],
         trendId: null,
         trendIndex: null,
@@ -16,10 +22,19 @@ export default {
             trend: "",
             trendName: "",
             topicID: [],
+            created: {
+                name: "",
+                username: "",
+                timestamp_created: null,
+            },
+
+            updated: {
+                name: "",
+                username: "",
+                timestamp_updated: null,
+            },
         },
-        userEmail: null,
-        userFirstName: null,
-        userLastName: null,
+
     },
 
     getters: {
@@ -27,6 +42,8 @@ export default {
         currentTopicTrends: (state) => state.trends,
         currentTrendId: (state) => state.trendId,
         currentTrend: (state) => state.currentTrend,
+        // created: (state) => state.created,
+        // updated: (state) => state.updated,
         buttonLabel: (state) => {
             if (state.trendId != null) {
                 return "Edit Trend";
@@ -89,12 +106,12 @@ export default {
             var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
             var dateTime = date + ' ' + time;
 
-            console.log("------");
+            console.log("------NEW------");
             console.log(dateTime);
             console.log(state.userEmail);
             console.log(state.userFirstName);
             console.log(state.userLastName);
-            console.log("------");
+            console.log("------NEW------");
         },
 
         //* clear fields
@@ -119,10 +136,41 @@ export default {
             let currentTrend = state.trends[index];
             commit("SET_TREND_INDEX", index);
             commit("SET_CURRENT_TREND", currentTrend);
+
+
         },
 
+
+
         //* submit edit trend
-        async submitEditTrend({ state, dispatch }) {
+        async submitEditTrend({ state, commit, dispatch }) {
+
+            const updatedFields = {
+                name: state.userFirstName + " " + state.userLastName,
+                username: state.userEmail,
+                timestamp_updated: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+
+            console.log(state.userEmail);
+
+            commit("SET_UPDATED_FIELDS", updatedFields);
+
+            // state.updated.name = state.userFirstName + " " + state.userLastName;
+            // state.updated.username = state.userEmail;
+            // state.updated.timestamp_updated = firebase.firestore.FieldValue.serverTimestamp();
+
+            // var today = new Date();
+            // var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            // var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            // var dateTime = date + ' ' + time;
+
+            // console.log("------UPDATE------");
+            // console.log(dateTime);
+            // console.log(state.userEmail);
+            // console.log(state.userFirstName);
+            // console.log(state.userLastName);
+            // console.log("------UPDATE------");
+
             await trendRef
                 .doc(state.trendId)
                 .set(state.currentTrend, { merge: true })
@@ -174,6 +222,10 @@ export default {
         SET_TREND_ID: (state, trendId) => (state.trendId = trendId),
         SET_TREND_INDEX: (state, index) => (state.trendIndex = index),
         DELETE_TREND: (state, index) => state.trend.splice(index, 1),
+
+        SET_UPDATED_FIELDS(state, updatedFields) {
+            state.currentTrend.updated = updatedFields;
+        },
         // UPDATE_TERM: (state, term) => (state.terms[state.termIndex] = term),
     },
 };
