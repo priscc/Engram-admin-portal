@@ -46,7 +46,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Reference to the collection and document ID of the specific document you want to update
-collection_ref = db.collection("terminology")
+collection_ref = db.collection("works")
 
 # Create a dictionary with the data you want to update
 update_data = {
@@ -62,7 +62,7 @@ update_data = {
     }
 }
 
-# doc_ref = collection_ref.document('6eRJPIPpcjHuUhPtQIQ3')
+# doc_ref = collection_ref.document('0EjWy8hzSEPQCkh04TJr')
 # doc_ref.update(update_data)
 
 # print("New fields added to the specified document.")
