@@ -144,6 +144,7 @@
 </template>
 
 <script>
+import store from "@/store";
 import firebase from "firebase";
 
 export default {
@@ -197,6 +198,15 @@ export default {
           (UserCredential) => {
             console.log(UserCredential);
             alert(`Account created for ${this.email}`);
+
+            console.log(this.firstName);
+            console.log(this.lastName);
+
+            this.$store.commit('trends/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
+
             this.$router.push("/topiclist");
           },
           (err) => {
@@ -215,9 +225,23 @@ export default {
         .signInWithEmailAndPassword(this.loginEmail, this.loginPassword)
         .then(
           (UserCredential) => {
+
             console.log(UserCredential);
             console.log(UserCredential.user);
+            console.log(this.firstName);
+            console.log(this.lastName);
+            // console.log("---")
+            // console.log(this.loginEmail);
+            // console.log("---")
             alert(`You are logged in as ${this.loginEmail}`);
+
+            console.log("ran");
+
+
+            this.$store.commit('trends/SET_USER_EMAIL', this.loginEmail);
+            
+            
+            console.log("saved email var to store");
             this.$router.push("/topiclist");
           },
           (err) => {

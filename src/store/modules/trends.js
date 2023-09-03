@@ -17,6 +17,9 @@ export default {
             trendName: "",
             topicID: [],
         },
+        userEmail: null,
+        userFirstName: null,
+        userLastName: null,
     },
 
     getters: {
@@ -31,6 +34,10 @@ export default {
                 return "+ Add Trend";
             }
         },
+        userEmail: (state) => store.state.user.userEmail,
+        userFirstName: (state) => store.state.user.userFirstName,
+        userLastName: (state) => store.state.user.userLastName,
+
     },
 
     actions: {
@@ -53,7 +60,7 @@ export default {
                         }),
                         await commit("SET_TOPIC_TRENDS", trendList);
                 });
-            console.log(state.trends);
+            // console.log(state.trends);
         },
 
         //* clears trend id
@@ -69,11 +76,25 @@ export default {
                 console.log("Trend Added");
             });
 
+
+
             //* fetch new list of trends
             dispatch("fetchTrends");
 
             //* clears the fields
             dispatch("clearFields");
+
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date + ' ' + time;
+
+            console.log("------");
+            console.log(dateTime);
+            console.log(state.userEmail);
+            console.log(state.userFirstName);
+            console.log(state.userLastName);
+            console.log("------");
         },
 
         //* clear fields
@@ -132,6 +153,16 @@ export default {
     },
 
     mutations: {
+        SET_USER_EMAIL(state, email) {
+            console.log(email);
+            state.userEmail = email;
+        },
+
+        SET_USER_NAME(state, { firstName, lastName }) {
+            state.userFirstName = firstName;
+            state.userLastName = lastName;
+        },
+
         ...vuexfireMutations,
         updateField,
         SET_TOPIC_TRENDS: (state, trends) => (state.trends = trends),

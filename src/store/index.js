@@ -15,29 +15,29 @@ Vue.use(Vuex);
 Vue.use(db);
 
 export default new Vuex.Store({
-  strict: true,
-  modules: {
-    events,
-    trends,
-    topics,
-    people,
-    terminology,
-    works,
-    videos,
-    articles,
-  },
-  plugins: [
-    createPersistedState({
-      paths: [
-        "events",
-        "trends",
-        "topics",
-        "people",
-        "terminology",
-        "works",
-        "videos",
-        "articles",
-      ],
-    }),
-  ],
+    strict: true,
+    modules: {
+        events,
+        trends,
+        topics,
+        people,
+        terminology,
+        works,
+        videos,
+        articles,
+    },
+    plugins: [
+        createPersistedState({
+            paths: [
+                "events",
+                "trends",
+                "topics",
+                "people",
+                "terminology",
+                "works",
+                "videos",
+                "articles",
+            ],
+        }),
+    ],
 });
