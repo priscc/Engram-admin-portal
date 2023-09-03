@@ -49,9 +49,9 @@ export default {
                 return "+ Add Trend";
             }
         },
-        userEmail: (state) => store.state.user.userEmail,
-        userFirstName: (state) => store.state.user.userFirstName,
-        userLastName: (state) => store.state.user.userLastName,
+        userEmail: (state) => state.userEmail,
+        userFirstName: (state) => state.userFirstName,
+        userLastName: (state) => state.userLastName,
 
     },
 

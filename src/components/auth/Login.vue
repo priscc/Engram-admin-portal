@@ -212,6 +212,11 @@ export default {
               lastName: this.lastName,
             });
 
+            this.$store.commit('events/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
+
             this.$router.push("/topiclist");
           },
           (err) => {
@@ -239,6 +244,7 @@ export default {
 
             this.$store.commit('trends/SET_USER_EMAIL', this.loginEmail);
             this.$store.commit('people/SET_USER_EMAIL', this.loginEmail);
+            this.$store.commit('events/SET_USER_EMAIL', this.loginEmail);
 
             this.$store.commit('trends/SET_USER_NAME', {
               firstName: this.firstName,
@@ -250,9 +256,11 @@ export default {
               lastName: this.lastName,
             });
 
+            this.$store.commit('events/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
 
-            
-            
             console.log("saved email var to store");
             this.$router.push("/topiclist");
           },
