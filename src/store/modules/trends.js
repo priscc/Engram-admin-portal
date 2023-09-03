@@ -42,8 +42,6 @@ export default {
         currentTopicTrends: (state) => state.trends,
         currentTrendId: (state) => state.trendId,
         currentTrend: (state) => state.currentTrend,
-        // created: (state) => state.created,
-        // updated: (state) => state.updated,
         buttonLabel: (state) => {
             if (state.trendId != null) {
                 return "Edit Trend";
@@ -132,10 +130,7 @@ export default {
             let currentTrend = state.trends[index];
             commit("SET_TREND_INDEX", index);
             commit("SET_CURRENT_TREND", currentTrend);
-
-
         },
-
 
 
         //* submit edit trend
@@ -146,8 +141,6 @@ export default {
                 username: state.userEmail,
                 timestamp_updated: firebase.firestore.FieldValue.serverTimestamp(),
             };
-
-            console.log(state.userEmail);
 
             commit("SET_UPDATED_FIELDS", updatedFields);
 

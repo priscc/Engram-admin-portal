@@ -46,13 +46,13 @@ document_id = "your_document_id_here"  # Replace with the actual document ID
 # Create a dictionary with the data you want to update
 update_data = {
     "created": {
-        "name": "your_name_value",
-        "username": "your_user_value",
+        "name": "",
+        "username": "",
         "timestamp_created": firestore.SERVER_TIMESTAMP
     },
     "updated": {
-        "name": "your_name_value",
-        "username": "your_user_value",
+        "name": "",
+        "username": "",
         "timestamp_updated": firestore.SERVER_TIMESTAMP
     }
 }
