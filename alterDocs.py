@@ -27,8 +27,6 @@
 
 # print("New field for trend-name added to all documents in collection.")
 
-
-
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -41,7 +39,6 @@ db = firestore.client()
 
 # Reference to the collection and document ID of the specific document you want to update
 collection_ref = db.collection("trends")
-document_id = "your_document_id_here"  # Replace with the actual document ID
 
 # Create a dictionary with the data you want to update
 update_data = {
@@ -57,8 +54,17 @@ update_data = {
     }
 }
 
-# Update the specific document with the new fields
-doc_ref = collection_ref.document('XJPRbcGQSv5GZ9s8x86Q')
-doc_ref.update(update_data)
+docs = collection_ref.stream()
 
-print("New fields added to the specified document.")
+# Update each document with the new fields
+for doc in docs:
+    doc_ref = collection_ref.document(doc.id)
+    doc_ref.update(update_data)
+
+print("New fields added to all documents in collection.")
+
+# Update the specific document with the new fields
+# doc_ref = collection_ref.document('XJPRbcGQSv5GZ9s8x86Q')
+# doc_ref.update(update_data)
+
+# print("New fields added to the specified document.")
