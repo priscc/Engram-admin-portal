@@ -204,6 +204,11 @@ export default {
               lastName: this.lastName,
             });
 
+            this.$store.commit('topics/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
+
             this.$store.commit('works/SET_USER_NAME', {
               firstName: this.firstName,
               lastName: this.lastName,
@@ -258,8 +263,14 @@ export default {
             this.$store.commit('people/SET_USER_EMAIL', this.loginEmail);
             this.$store.commit('events/SET_USER_EMAIL', this.loginEmail);
             this.$store.commit('terminology/SET_USER_EMAIL', this.loginEmail);
+            this.$store.commit('topics/SET_USER_EMAIL', this.loginEmail);
 
             this.$store.commit('trends/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
+
+            this.$store.commit('topics/SET_USER_NAME', {
               firstName: this.firstName,
               lastName: this.lastName,
             });

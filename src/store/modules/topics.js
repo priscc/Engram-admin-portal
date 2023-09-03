@@ -3,12 +3,20 @@ import { db } from "../../firebase/db";
 import { getField, updateField } from "vuex-map-fields";
 import router from "../../router";
 
+import firebase from "firebase";
+
+
 const topicsRef = db.collection("topics");
 const resourcesRef = db.collection("resources");
 
 export default {
     namespaced: true,
     state: {
+
+        userEmail: null,
+        userFirstName: null,
+        userLastName: null,
+
         topics: [],
         topicID: null,
         currentTopic: {
@@ -23,6 +31,18 @@ export default {
             timePeriod: null,
             searchArray: [],
             unit: "",
+
+            created: {
+                name: "",
+                username: "",
+                timestamp_created: null,
+            },
+
+            updated: {
+                name: "",
+                username: "",
+                timestamp_updated: null,
+            },
         },
         videoID: null,
         videoURL: null,
@@ -37,6 +57,10 @@ export default {
         currentTopic: (state) => state.currentTopic,
         currentResources: (state) => state.resources,
         currentArticles: (state) => state.articles,
+        userEmail: (state) => state.userEmail,
+        userFirstName: (state) => state.userFirstName,
+        userLastName: (state) => state.userLastName,
+
         getField,
     },
 
@@ -67,6 +91,15 @@ export default {
 
         //* submit new topic
         async submitNewTopic({ state, commit, dispatch }) {
+
+            const createdFields = {
+                name: state.userFirstName + " " + state.userLastName,
+                username: state.userEmail,
+                timestamp_created: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+
+            commit("SET_CREATED_FIELDS", createdFields);
+
             console.log("in submitNewTopic");
             commit("SET_SEARCH_ARRAY", state.currentTopic.title);
             console.log("in 2 submitNewTopic", state.currentTopic);
@@ -145,6 +178,15 @@ export default {
 
         //* handles submit for edit topic
         async submitEditTopic({ state, commit, dispatch }) {
+
+            const updatedFields = {
+                name: state.userFirstName + " " + state.userLastName,
+                username: state.userEmail,
+                timestamp_updated: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+
+            commit("SET_UPDATED_FIELDS", updatedFields);
+
             commit("UPDATE_SEARCH_ARRAY", state.currentTopic.title);
             console.log("MarkUP", state.currentTopic.introMD);
             await topicsRef
@@ -217,11 +259,11 @@ export default {
         },
 
         SET_UPDATED_FIELDS(state, updatedFields) {
-            state.currentTrend.updated = updatedFields;
+            state.currentTopic.updated = updatedFields;
         },
 
         SET_CREATED_FIELDS(state, createdFields) {
-            state.currentTrend.created = createdFields;
+            state.currentTopic.created = createdFields;
         },
 
         SET_USER_EMAIL(state, email) {
