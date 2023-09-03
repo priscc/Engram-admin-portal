@@ -199,9 +199,6 @@ export default {
             console.log(UserCredential);
             alert(`Account created for ${this.email}`);
 
-            console.log(this.firstName);
-            console.log(this.lastName);
-
             this.$store.commit('trends/SET_USER_NAME', {
               firstName: this.firstName,
               lastName: this.lastName,
@@ -213,6 +210,11 @@ export default {
             });
 
             this.$store.commit('events/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
+
+            this.$store.commit('terminology/SET_USER_NAME', {
               firstName: this.firstName,
               lastName: this.lastName,
             });
@@ -236,8 +238,12 @@ export default {
         .then(
           (UserCredential) => {
 
+            console.log("------")
             console.log(UserCredential);
             console.log(UserCredential.user);
+
+            console.log(this.firstName)
+            console.log("------")
 
 
             alert(`You are logged in as ${this.loginEmail}`);
@@ -245,6 +251,7 @@ export default {
             this.$store.commit('trends/SET_USER_EMAIL', this.loginEmail);
             this.$store.commit('people/SET_USER_EMAIL', this.loginEmail);
             this.$store.commit('events/SET_USER_EMAIL', this.loginEmail);
+            this.$store.commit('terminology/SET_USER_EMAIL', this.loginEmail);
 
             this.$store.commit('trends/SET_USER_NAME', {
               firstName: this.firstName,
@@ -257,6 +264,11 @@ export default {
             });
 
             this.$store.commit('events/SET_USER_NAME', {
+              firstName: this.firstName,
+              lastName: this.lastName,
+            });
+
+            this.$store.commit('terminology/SET_USER_NAME', {
               firstName: this.firstName,
               lastName: this.lastName,
             });
