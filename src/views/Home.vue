@@ -2,40 +2,23 @@
 	<v-container style="min-height: 100vh;">
 		<v-row class="d-flex justify-end">
 			<v-col cols="6">
-				<v-alert
-					v-model="alert"
-					dismissible
-					text
-					outlined
-					dense
-					color="success"
-					icon="mdi-checkbox-marked-circle"
-					border="left"
-				>
+				<v-alert v-model="alert" dismissible text outlined dense color="success"
+					icon="mdi-checkbox-marked-circle" border="left">
 					<p><b>Success:</b> {{ alertMessage }}</p>
 				</v-alert>
 			</v-col>
 		</v-row>
 		<v-row>
 			<v-col>
-				<Header
-					v-bind:header="'Hello!!'"
-					v-bind:description="
-						'Buttons below are simplied actions you can take to update Engram`s database'
-					"
-				/>
+				<Header v-bind:header="'Hello!!'" v-bind:description="'Buttons below are simplied actions you can take to update Engram`s database'
+					" />
 			</v-col>
 		</v-row>
+
 		<v-row class="pt-16">
 			<v-col cols="12">
-				<v-btn
-					@click="updatingSearch()"
-					lg
-					dark
-					outlined
-					large
-					color="purple"
-					>Update Search Bar Autofill options
+				<v-btn @click="updatingSearch()" lg dark outlined large color="purple">Update Search Bar Autofill
+					options
 				</v-btn>
 			</v-col>
 			<v-col cols="12">
@@ -98,7 +81,7 @@ export default {
 				.collection("topics")
 				.get()
 				.then(
-					function(querySnapshot) {
+					function (querySnapshot) {
 						querySnapshot.docs.map((doc) => {
 							this.topicSearchItems.push({
 								document: doc.data(),
@@ -114,9 +97,9 @@ export default {
 				.collection("events")
 				.get()
 				.then(
-					function(querySnapshot) {
+					function (querySnapshot) {
 						querySnapshot.docs.map((doc) => {
-							if(this.eventSearchItems1.length < 50){
+							if (this.eventSearchItems1.length < 50) {
 								this.eventSearchItems1.push({
 									document: doc.data(),
 									collection: "events",
@@ -124,15 +107,15 @@ export default {
 									topicID: doc.data().topicID[0],
 								});
 							}
-							else{
+							else {
 								this.eventSearchItems2.push({
-								document: doc.data(),
-								collection: "events",
-								title: "Event: " + doc.data().title,
-								topicID: doc.data().topicID[0],
-							});
+									document: doc.data(),
+									collection: "events",
+									title: "Event: " + doc.data().title,
+									topicID: doc.data().topicID[0],
+								});
 							}
-							
+
 						});
 					}.bind(this)
 				);
@@ -140,7 +123,7 @@ export default {
 				.collection("people")
 				.get()
 				.then(
-					function(querySnapshot) {
+					function (querySnapshot) {
 						querySnapshot.docs.map((doc) => {
 							console.log("updating Search PEOPLE" + doc.data().name)
 							this.peopleSearchItems.push({
@@ -156,7 +139,7 @@ export default {
 				.collection("works")
 				.get()
 				.then(
-					function(querySnapshot) {
+					function (querySnapshot) {
 						querySnapshot.docs.map((doc) => {
 							this.workSearchItems.push({
 								document: doc.data(),
@@ -171,7 +154,7 @@ export default {
 				.collection("terminology")
 				.get()
 				.then(
-					function(querySnapshot) {
+					function (querySnapshot) {
 						querySnapshot.docs.map((doc) => {
 							this.termSearchItems.push({
 								document: doc.data(),
